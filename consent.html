@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Subscribe — Consent</title>
+    <style>
+      :root {
+        --bg: #0f1724;
+        --card: #111827;
+        --accent: #0ea5ff;
+        --text: #e6eef8;
+        --muted: #9aa6b2;
+        --shadow: 0 10px 30px rgba(2, 6, 23, 0.6);
+      }
+      body {
+        margin: 0;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial;
+        background: linear-gradient(180deg, #081226 0%, #041027 100%);
+        color: var(--text);
+        min-height: 100vh;
+      }
+
+      .consent {
+        position: fixed;
+        right: 1.25rem;
+        bottom: 1.25rem;
+        width: min(420px, calc(100% - 2.5rem));
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.02),
+          rgba(255, 255, 255, 0.01)
+        );
+        color: var(--text);
+        border-radius: 12px;
+        padding: 18px;
+        box-shadow: var(--shadow);
+        display: none;
+        gap: 12px;
+        align-items: start;
+        z-index: 10000;
+        transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.3, 1),
+          opacity 0.22s ease;
+        transform: translateY(12px);
+        opacity: 0;
+      }
+      .consent.show {
+        display: flex;
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .consent .icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, var(--accent), #7c3aed);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        color: #03202e;
+        flex-shrink: 0;
+      }
+      .consent .content {
+        flex: 1;
+        min-width: 0;
+      }
+      .consent h3 {
+        margin: 0 0 6px 0;
+        font-size: 16px;
+        line-height: 1.15;
+      }
+      .consent p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .consent .actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+      }
+      .btn {
+        border: 0;
+        border-radius: 8px;
+        padding: 8px 14px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 14px;
+      }
+      .btn.accept {
+        background: linear-gradient(90deg, var(--accent), #7c3aed);
+        color: #031827;
+      }
+      .btn.secondary {
+        background: transparent;
+        color: var(--text);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+      }
+    </style>
+  </head>
+  <body>
+    <h1 style="padding: 24px; color: var(--text); font-weight: 600">
+      Demo page — consent form
+    </h1>
+
+    <aside
+      id="consenting"
+      class="consent"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="consent-title"
+      aria-describedby="consent-desc"
+    >
+      <div class="icon" aria-hidden="true">💬</div>
+      <div class="content">
+        <h3 id="consent-title">Subscribe to our newsletter</h3>
+        <p id="consent-desc">
+          We send helpful tips and product updates once a week. By choosing
+          Accept, you agree to receive emails. You can manage preferences or opt
+          out anytime.
+        </p>
+        <div class="actions" aria-hidden="false">
+          <button class="btn accept" id="acceptBtn">Accept</button>
+          <button class="btn secondary" id="declineBtn">Decline</button>
+        </div>
+      </div>
+    </aside>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const toast = document.getElementById("consenting");
+        const acceptBtn = document.getElementById("acceptBtn");
+        const declineBtn = document.getElementById("declineBtn");
+        const manageLink = document.getElementById("manageLink");
+        const COOKIE_NAME = "cookieConsentV2";
+
+        function getCookie(name) {
+          const value = `; ${document.cookie}`;
+          const parts = value.split(`; ${name}=`);
+          if (parts.length === 2) return parts.pop().split(";").shift();
+          return null;
+        }
+
+        function setCookie(name, value, days = 365) {
+          const maxAge = days * 24 * 60 * 60;
+
+          document.cookie = `${name}=${value}; max-age=${maxAge}; path=/; SameSite=Lax`;
+        }
+
+        if (!getCookie(COOKIE_NAME)) {
+          setTimeout(() => {
+            toast.classList.add("show");
+
+            acceptBtn.focus();
+          }, 200);
+        }
+
+        acceptBtn.addEventListener("click", () => {
+          setCookie(COOKIE_NAME, "accepted", 365);
+          toast.classList.remove("show");
+        });
+
+        declineBtn.addEventListener("click", () => {
+          setCookie(COOKIE_NAME, "declined", 365);
+          toast.classList.remove("show");
+        });
+
+        document.addEventListener("keydown", (e) => {
+          if (!getCookie(COOKIE_NAME) && e.key === "Escape") {
+            setCookie(COOKIE_NAME, "declined", 365);
+            toast.classList.remove("show");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
