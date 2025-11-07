@@ -1,0 +1,46 @@
+// --- tsconfig.json excerpt (inside compilerOptions) ---
+{
+  "compilerOptions": {
+    // Basic compilation target settings (what you provided)
+    "target": "ES2020", // Often ES2020 or ES2022 is sufficient
+    "lib": ["ES2020", "DOM", "DOM.Iterable"], // MUST include DOM and DOM.Iterable for React/browser code
+    "module": "ESNext",
+    "types": ["node"],
+    "skipLibCheck": true,
+    
+    // --- KEY SETTINGS FOR REACT/JSX RESOLUTION ---
+    
+    // 1. Specifies the JSX emit mode (necessary for React's createElement/jsx functions)
+    "jsx": "react-jsx", 
+    
+    // 2. Allow importing .js/.jsx files into TypeScript files
+    "allowJs": true, 
+    
+    // 3. Essential for resolving modules written in different formats (like CommonJS)
+    "esModuleInterop": true, 
+    
+    // 4. Allows default imports from modules without default exports (e.g., `import React from 'react'`)
+    "allowSyntheticDefaultImports": true, 
+    
+    // 5. Specifies how modules are resolved (Node is the standard for Vite/NPM packages)
+    "moduleResolution": "node", 
+    
+    // 6. Root directory settings (highly recommended for clean imports)
+    "baseUrl": "./",
+    "paths": {
+      // Allows imports like: import MyComponent from "@/components/..."
+      "@/*": ["src/*"] 
+    },
+    
+    // 7. Strictness settings (Recommended for production code)
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    
+    // 8. Output and compilation files
+    "outDir": "./dist",
+    "composite": true,
+    "tsBuildInfoFile": "./node_modules/.cache/tsbuildinfo", // What you provided
+  }
+  // Make sure your include array is correct
+  // "include": ["src/**/*"], 
+}

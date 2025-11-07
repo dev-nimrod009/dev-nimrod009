@@ -1,0 +1,37 @@
+Sticky Position: Ensure the Navbar is sticky or fixed at the top of the screen so users can navigate easily while scrolling through long content sections.
+
+B. Portfolio
+
+Focus: Reusable ProjectCard Component. This is your most valuable section.
+
+Essential Work:
+
+Data Source: Define your projects using a static JSON array in a separate data file (or directly in your component file). This makes maintenance easy.
+
+ProjectCard Props: Create a single, reusable component (ProjectCard) that accepts props for: Title, Description, Technologies Used, Image/Screenshot URL, GitHub Link, and Live Demo Link.
+
+Grid Layout: Use a responsive CSS Grid (or Tailwind CSS grid classes) to display the cards cleanly on desktop (e.g., 2 or 3 columns) and stack them on mobile.
+
+Alternative: For simplicity, provide a direct mailto: link on a prominent "Send Email" button.
+
+By focusing on these specific content and functional requirements for each component, you will ensure your portfolio is professional, highly readable, and effective at showcasing your skills.
+
+COLORS
+
+Element,Color Name,Tailwind Class,Usage
+Primary/Accent,Indigo / Sky Blue,indigo-600 or sky-500,"Used for buttons, progress bars, and hover states. (This is similar to what we used in the CV file.)"
+
+Background,Off-White / Light Grey,gray-50 or gray-100,"Provides a clean, spacious canvas."
+
+Text/Body,Charcoal Black,gray-800 or gray-900,Ensures high contrast and readability.
+
+Code/Highlight,Teal,teal-500,Perfect for highlighting code snippets or skill icons.
+
+Element,Color Name,Tailwind Class,Usage
+Primary/Accent,Violet / Fuchsia,violet-500 or fuchsia-500,"Strong, unique color for all interactive elements and headings."
+
+Background,Dark Slate,slate-900 or gray-900,"Creates a dramatic, modern, and high-contrast dark mode foundation."
+
+Text/Body,Light Grey,gray-100 or gray-200,Primary text color for readability against the dark background.
+
+Secondary Accent,Cyan,cyan-400,Used sparingly for small details or links to provide a jolt of energy.
