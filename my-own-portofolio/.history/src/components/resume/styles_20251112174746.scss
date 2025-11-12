@@ -1,0 +1,31 @@
+.resume_container {
+
+    .skills_div {
+        display: flex;
+        justify-content: space-around;
+
+
+        .skills {
+            font-size: 22px;
+            font-weight: 600;
+
+            p {}
+
+            ul {
+
+
+
+                li {
+
+
+                    p:first-child {}
+
+                    p {}
+
+                    p:last-child {}
+                }
+            }
+
+        }
+    }
+}

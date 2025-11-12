@@ -1,6 +1,6 @@
 import React from "react";
 import HeadName from "../headName/headName";
-
+import "./styles.scss";
 export default function MyContacts() {
   const socialHandles = [
     {
@@ -36,22 +36,26 @@ export default function MyContacts() {
   ];
 
   return (
-    <div className="main_div">
+    <div className="main_div_contact">
       <HeadName headName="Contact Me" />
       <form className="input_part">
-        <label>Full Name</label>
-        <input placeholder="Full Name" type="text" />
-        <label id="email-part">Email</label>
-        <input
-          className="email-part"
-          type="email"
-          placeholder="What's your email"
-        />
+        <label>
+          Full Name
+          <input placeholder="Full  Name" type="text" />
+        </label>
+        <label id="email-part">
+          Email
+          <input
+            className="email-part"
+            type="email"
+            placeholder="What's your email"
+          />
+        </label>
 
         <label id="content" htmlFor="content">
           Message
+          <textarea id="content" placeholder="Hi....." />
         </label>
-        <input id="content" type="text" placeholder="Hi....." />
         <button type="submit">Submit</button>
       </form>
       <div className="social_holders">
@@ -60,18 +64,22 @@ export default function MyContacts() {
           <ul>
             {socialHandles.map((item, i) => (
               <li key={i}>
-                <span>{item.name} : </span>
+                <span>
+                  <b>{item.name} :</b>{" "}
+                </span>
                 <span>{item.value}</span>
               </li>
             ))}
           </ul>
         </div>
         <div className="meta_handles">
-          <h4> online Platforms</h4>
+          <p> online Platforms</p>
           <ul>
             {metaHandles.map((item, i) => (
               <li key={i}>
-                <span>{item.name} : </span>
+                <span>
+                  <b>{item.name}</b> :{" "}
+                </span>
                 <a>{item.value}</a>
               </li>
             ))}

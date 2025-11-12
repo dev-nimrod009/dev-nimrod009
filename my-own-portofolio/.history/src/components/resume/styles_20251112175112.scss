@@ -1,0 +1,36 @@
+.resume_container {
+
+    .skills_div {
+        display: flex;
+        justify-content: space-around;
+
+
+        .skills {
+            display: grid;
+
+            p {
+                font-size: 22px;
+                font-weight: 600;
+                color: var(--color-text, );
+
+
+            }
+
+            ul {
+                list-style: none;
+
+
+                li {
+
+
+                    p:first-child {}
+
+                    p {}
+
+                    p:last-child {}
+                }
+            }
+
+        }
+    }
+}

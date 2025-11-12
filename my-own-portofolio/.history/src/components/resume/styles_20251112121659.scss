@@ -1,0 +1,36 @@
+.container {
+
+    .skills_div {
+        display: falign-items: space-between;
+        lex;
+
+        .skills {
+            p {
+                font-size: 25px;
+            }
+
+            ul {
+                display: grid;
+
+
+                li {
+                    display: flex;
+                    gap: 5px;
+
+                    p:first-child {
+                        font-size: 20px;
+                    }
+
+                    p {
+                        font-size: 15px;
+                    }
+
+                    p:last-child {
+                        font-size: 20px;
+                    }
+                }
+            }
+
+        }
+    }
+}

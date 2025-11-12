@@ -1,5 +1,33 @@
 import HeadName from "../headName/headName";
+import "./styles.scss";
 
+interface SkillProps {
+  name: string;
+  percentage: number;
+  value: string;
+}
+const SkillBar: React.FC<SkillProps> = ({ name, percentage, value }) => {
+  const properPercent = Math.min(100, Math.max(0, percentage));
+  return (
+    <li className="skills_item">
+      <p>{name}</p>
+      <div className="progress_bar">
+        <div
+          className="bar_fill"
+          style={{ width: `${properPercent}%` }}
+          role="progressbar"
+          aria-label={`${name} proficiency`}
+          aria-valuenow={properPercent}
+          aria-valuemin="0"
+          aria-valuemax="100"
+        ></div>
+      </div>
+      <div className="show_percent">
+        <p>{properPercent}%</p>
+      </div>
+    </li>
+  );
+};
 export default function MyResume() {
   const technicalSkills = {
     frontend: [
@@ -49,43 +77,47 @@ export default function MyResume() {
       },
     ],
   };
+
   return (
-    <div className="container">
+    <div className="resume_container">
       <HeadName headName="My Resume" />
       <div className="skills_div">
-        <div className="frontend_skills">
-          <h2>FRONTEND</h2>
+        <div className=" skills">
+          <p>FRONTEND</p>
           <ul>
             {technicalSkills.frontend.map((item, i) => (
-              <li key={i}>
-                <p>{item.name}</p>
-                <span>{item.percentage}</span>
-                <span>{item.value}</span>
-              </li>
+              <SkillBar
+                key={i}
+                name={item.name}
+                percentage={item.percentage}
+                value={item.value}
+              />
             ))}
           </ul>
         </div>
-        <div className="backend_skills">
-          <h2>BACKEND</h2>
+        <div className=" skills">
+          <p>BACKEND</p>
           <ul>
             {technicalSkills.backend.map((item, i) => (
-              <li key={i}>
-                <p>{item.name}</p>
-                <span>{item.percentage}</span>
-                <span>{item.value}</span>
-              </li>
+              <SkillBar
+                key={i}
+                name={item.name}
+                percentage={item.percentage}
+                value={item.value}
+              />
             ))}
           </ul>
         </div>
-        <div className="database_skills">
-          <h2>DATABASE</h2>
+        <div className=" skills">
+          <p>DATABASE</p>
           <ul>
             {technicalSkills.database.map((item, i) => (
-              <li key={i}>
-                <p>{item.name}</p>
-                <span>{item.percentage}</span>
-                <span>{item.value}</span>
-              </li>
+              <SkillBar
+                key={i}
+                name={item.name}
+                percentage={item.percentage}
+                value={item.value}
+              />
             ))}
           </ul>
         </div>

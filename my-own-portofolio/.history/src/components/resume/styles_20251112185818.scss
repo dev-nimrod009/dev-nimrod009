@@ -1,0 +1,77 @@
+.resume_container {
+
+    .skills_div {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        justify-content: space-around;
+        gap: 2rem;
+
+        .skills {
+            background-color: var(--color-background);
+            border: 1px solid var(--color-background);
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+
+            p {
+                font-size: 22px;
+                font-weight: 700;
+                margin-bottom: 1rem;
+                text-transform: uppercase;
+                border-bottom: 2px solid var(--color-background);
+                padding-bottom: 0.5rem;
+                color: var(--color-text);
+
+
+            }
+
+            ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                gap: 1em;
+
+                li {
+                    display: grid;
+                    grid-template-columns: 100px 1fr 45px;
+                    align-items: center;
+                    gap: 1rem;
+                    padding: 0.5rem 0;
+                    font: size 1rem;
+
+
+                    p {
+                        font-weight: 500;
+                        color: var(--primary-text);
+                    }
+
+                    .progress_bar {
+                        width: 100%;
+                        height: 10px;
+                        background-color: var(--color-background);
+                        border-radius: 4px;
+                        overflow: hidden;
+
+                        .bar_fill {
+                            height: 100%;
+                            border-radius: 4px;
+                            background-color: var(#4f46e5, --color-background);
+                            transition: width 1.0s ease-out;
+                        }
+                    }
+
+                    p:last-child {
+                        display: none;
+                    }
+
+                    .show_percent {
+                        font-weight: 600;
+                        color: var(#4f46e5, --primary-text);
+                        text-align: right;
+                    }
+                }
+            }
+
+        }
+    }
+}

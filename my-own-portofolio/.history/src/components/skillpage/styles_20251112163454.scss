@@ -1,0 +1,64 @@
+.main_skills_div {
+    display: grid;
+
+
+    .name_tag {
+        padding-left: 80px;
+
+        p {
+            font-size: 26px;
+        }
+
+        span {
+            font-size: 20px;
+        }
+    }
+
+    .education {
+        padding-left: 80px;
+        display: grid;
+
+        p {
+            font-size: 28px;
+        }
+
+        span:first-child {
+            font-size: 20px;
+        }
+
+        span:last-child {
+            font-size: 20px;
+        }
+    }
+
+    .work_experience {
+        padding-left: 80px;
+        display: grid;
+
+        p {
+            font-size: 28px;
+        }
+
+        ul {
+
+            li {
+                display: grid;
+                gap: 3px;
+
+                p {
+                    font-size: 24px;
+                }
+
+                span:first-child {
+                    font-size: 20px;
+                }
+
+                span:last-child {
+                    font-size: 20px;
+                }
+            }
+
+
+        }
+    }
+}

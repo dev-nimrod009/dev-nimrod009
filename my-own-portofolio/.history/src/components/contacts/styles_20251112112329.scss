@@ -1,0 +1,139 @@
+.main_div_contact {
+    display: grid;
+    padding: 20px;
+    box-sizing: border-box;
+
+    .input_part {
+        display: grid;
+        width: 100%;
+        gap: 30px;
+        padding-top: 25px;
+        padding-left: 0px;
+        max-width: 920px;
+        margin: 0 auto;
+
+        label {
+            display: grid;
+            min-height: 30px;
+            gap: 5px;
+            font-size: 20px;
+            color: var(--color-text, #1F2937);
+            min-height: 30px;
+        }
+
+        input,
+        textarea {
+            min-height: 10px;
+            padding: 10px;
+            width: 100%;
+            font-size: 18px;
+            padding: 12px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+            background: var(--color-background, #FFFFFF);
+            color: var(--color-text, #1F2937);
+            box-sizing: border-box;
+            transition: box-shadow .14s ease, transform .12s ease, border-color .12s ease;
+            min-height: 44px;
+            resize: vertical;
+        }
+
+        textarea {
+            min-height: 140px;
+            padding-top: 12px;
+        }
+
+
+        input:last-child {
+            height: 44px;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: var(--color-primary, #4F46E5);
+            box-shadow: 0 6px 18px rgba(79, 70, 229, 0.06);
+            outline: none;
+        }
+
+        button {
+            margin: 28px auto;
+            padding: 12px 20px;
+            font-size: 25px;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            background: var(--color-primary, #4F46E5);
+            color: #fff;
+            min-height: 44px;
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+            transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+            display: inline-block;
+            width: 100%;
+
+
+        }
+    }
+
+    .social_holders {
+        margin-top: 28px;
+        display: grid;
+        gap: 20px;
+        width: 100%;
+        max-width: 920px;
+        margin-left: auto;
+        margin-right: auto;
+
+        .my_handles,
+        .meta_handles {
+            p {
+                font-size: 1.125rem;
+
+                margin: 0 0 8px 0;
+                color: var(--color-text, #1F2937);
+            }
+
+            ul {
+                margin: 0;
+                padding: 0;
+                display: grid;
+                gap: 10px;
+
+                li {
+                    list-style: none;
+                    display: flex;
+                    gap: 12px;
+                    align-items: center;
+                    padding: 8px 0;
+                    border-bottom: 1px dashed rgba(15, 23, 42, 0.03);
+                    min-height: 36px;
+                    width: 100%;
+
+                    span:first-child {
+                        font-size: 1rem;
+                        color: var(--color-primary, #4F46E5);
+                        min-width: 110px;
+                        flex-shrink: 0;
+                    }
+
+                    span:last-child,
+                    a {
+                        font-size: 0.98rem;
+                        flex-grow: 1;
+                        color: var(--color-text-secondary, #6B7280);
+                        word-break: break-word;
+                        min-width: 0;
+                        display: inline-block;
+                        white-space: nowrap;
+                        word-break: break-word;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
+
+                }
+            }
+        }
+
+
+
+    }
+}

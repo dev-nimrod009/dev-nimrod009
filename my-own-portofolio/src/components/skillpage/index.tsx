@@ -1,5 +1,5 @@
 import HeadName from "../headName/headName";
-
+import "./styles.scss";
 export default function MySkills() {
   const data = {
     personalDetails: {
@@ -29,31 +29,33 @@ export default function MySkills() {
     ],
   };
   return (
-    <div className="main_div">
+    <div className="main_skills_div">
       <HeadName headName="My Skills" />
-      <div className="name_tag">
-        <p>{data.personalDetails.name}</p>
-        <span>{data.personalDetails.value}</span>
-      </div>
+      <div className="center_wrap">
+        <div className="name_tag">
+          <p>{data.personalDetails.name}</p>
+          <span>{data.personalDetails.value}</span>
+        </div>
 
-      <div className="education">
-        <h1>EDUCATION</h1>
-        <h2>{data.education.name}</h2>
-        <h6>{data.education.institution}</h6>
-        <em>{data.education.dates}</em>
-      </div>
-      <div className="work_experience">
-        <h1>WORK EXPERIENCE</h1>
-        <ul>
-          {data.workExperience.map((item, i) => (
-            <li key={i}>
-              <h3>{item.name}</h3>
-              <h6>{item.institution}</h6>
-              <em>{item.dates}</em>
-              <p>{item.cores}</p>
-            </li>
-          ))}
-        </ul>
+        <div className="education">
+          <p>EDUCATION</p>
+          <span>{data.education.name}</span>
+          <span>{data.education.institution}</span>
+          <em>{data.education.dates}</em>
+        </div>
+        <div className="work_experience">
+          <p>WORK EXPERIENCE</p>
+          <ul>
+            {data.workExperience.map((item, i) => (
+              <li key={i}>
+                <p>{item.name}</p>
+                <span>{item.institution}</span>
+                <em>{item.dates}</em>
+                <span>{item.cores}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );

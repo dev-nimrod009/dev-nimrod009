@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import HeadName from "../headName/headName";
-
+import "./styles.scss";
 export default function AboutMe() {
   const fullData = {
     backThen: [
@@ -44,22 +44,18 @@ export default function AboutMe() {
   };
 
   return (
-    <div className="main_page">
+    <div className="main_about_page">
       <HeadName headName="About Me" />
       <div className="profile_container">
-        <div className="profile_photo">
-          <h4>we</h4>
-          <h4>we</h4>
-        </div>
+        <div className="profile_photo"></div>
         <div className="profile_name">
-          <h2>Nimrod Kinyanjui</h2>
+          <p>Nimrod Kinyanjui</p>
         </div>
       </div>
       <div className="brief_description">
         <ul>
           {fullData.backThen.map((items, i) => (
             <li key={i}>
-              {" "}
               <h4>{items.name}:</h4>
               <h6>{items.value}</h6>
             </li>
@@ -68,12 +64,16 @@ export default function AboutMe() {
         <ul>
           {fullData.myDetails.map((item, i) => (
             <li key={i}>
-              <span>{item.label}:</span>
-              <span>{item.value}</span>
+              <p>
+                <span>{item.label}:</span>
+                <span>{item.value}</span>
+              </p>
             </li>
           ))}
         </ul>
-        <Link to="/resume">View Full Resume</Link>
+        <div className="resume_button">
+          <Link to="/resume">View Full Resume</Link>
+        </div>
       </div>
     </div>
   );

@@ -1,8 +1,12 @@
 import React from "react";
-
+import "./styles.scss";
 function HeadName(props) {
   const { headName } = props;
-  return <h2>{headName}</h2>;
+  return (
+    <div className="head_container">
+      <p>{headName}</p>
+    </div>
+  );
 }
 
 export default HeadName;

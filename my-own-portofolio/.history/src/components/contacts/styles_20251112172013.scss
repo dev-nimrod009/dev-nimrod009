@@ -1,0 +1,93 @@
+.main_div_contact {
+    display: grid;
+    padding: 20px;
+
+    .input_part {
+        display: grid;
+
+        gap: 30px;
+        padding: 20px 40px 20px 0;
+
+        label {
+            display: grid;
+            min-height: 30px;
+            gap: 7px;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--color-text, #1F2937);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input {
+            min-height: 10px;
+            padding: 10px;
+            width: 50vw;
+            font-size: 18px;
+
+        }
+
+        input:focus {
+            outline: var(--primary-color);
+        }
+
+        input:last-child {
+            height: 40px;
+        }
+
+        button {
+            margin: 50px auto;
+            padding: 10px;
+            font-size: 25px;
+            background-color: var(--color-primary);
+            width: 150px;
+            border: none;
+            border-radius: 10px;
+
+        }
+    }
+
+    .social_holders {
+        .my_handles {
+
+            p {
+                font-size: 25px;
+            }
+
+            ul {
+                li {
+                    list-style: none;
+
+                    span:first-child {
+                        font-size: 20px;
+                    }
+
+                    span:last-child {
+                        font-size: 19px;
+                    }
+                }
+            }
+        }
+
+        .meta_handles {
+
+            p {
+                font-size: 25px;
+            }
+
+            ul {
+                li {
+                    list-style: none;
+
+                    span {
+                        font-size: 20px;
+                    }
+
+                    a {
+                        font-size: 19px;
+                    }
+                }
+            }
+        }
+    }
+}

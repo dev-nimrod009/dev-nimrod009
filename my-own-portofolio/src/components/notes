@@ -4,7 +4,7 @@ B. Portfolio
 
 Focus: Reusable ProjectCard Component. This is your most valuable section.
 
-Essential Work:
+Essential Work:y
 
 Data Source: Define your projects using a static JSON array in a separate data file (or directly in your component file). This makes maintenance easy.
 
