@@ -15,11 +15,15 @@ export default function NavBar() {
       path: "/skills",
     },
     {
-      name: "contact me",
+      name: "Contact Me",
       path: "/contactme",
     },
     {
-      name: "resume",
+      name: "Portofolio",
+      path: "/portofolio",
+    },
+    {
+      name: "Resume",
       path: "/resume",
     },
   ];
