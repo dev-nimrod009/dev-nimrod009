@@ -1,11 +1,14 @@
 import { useState, useMemo } from 'react'
-import { Search, Shield, Lock, Ban, Clock } from 'lucide-react'
+import { Search, Shield, Lock, Clock, Scale } from 'lucide-react'
 import { useData } from '../data/DataContext'
+import Modal from '../components/Modal'
+import LegalReferencePanel from '../components/LegalReferencePanel'
 import { getHoursHeld, getTimerColor, formatDuration } from '../components/CountdownTimer'
 
 export default function FieldOfficer() {
   const { detainees, stations } = useData()
   const [query, setQuery] = useState('')
+  const [lawModal, setLawModal] = useState(null)
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
@@ -113,10 +116,10 @@ export default function FieldOfficer() {
                       </span>
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <div className="inline-flex items-center gap-1.5 text-xs text-gray-400">
-                        <Ban className="w-3.5 h-3.5" />
-                        <span className="italic">No actions</span>
-                      </div>
+                      <button onClick={() => setLawModal(d)} className="inline-flex items-center gap-1 text-xs bg-slate-900 text-white hover:bg-slate-800 px-2.5 py-1.5 rounded font-medium transition-colors">
+                        <Scale className="w-3.5 h-3.5" />
+                        View Law
+                      </button>
                     </td>
                   </tr>
                 )
@@ -128,6 +131,21 @@ export default function FieldOfficer() {
           <div className="p-8 text-center text-slate-500 text-sm">No bookings match your search.</div>
         )}
       </div>
+
+      <Modal open={!!lawModal} onClose={() => setLawModal(null)} title="Legal Reference - Charge & Rights">
+        {lawModal && (
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="bg-slate-900 p-2.5 rounded-lg"><Scale className="w-5 h-5 text-white" /></div>
+              <div>
+                <p className="font-semibold text-slate-900">{lawModal.fullName}</p>
+                <p className="text-xs text-slate-500 font-mono">{lawModal.obNumber} — Charged with: {lawModal.offenseType}</p>
+              </div>
+            </div>
+            <LegalReferencePanel offenseType={lawModal.offenseType} />
+          </div>
+        )}
+      </Modal>
     </div>
   )
 }
