@@ -1,0 +1,10 @@
+.head_container {
+    border-bottom: 2px dashed var(--color-secondary);
+    width: 100%;
+
+    p {
+        font-size: 50px;
+        margin: 0 0 0 70px;
+        color: var(--color-text-secondary);
+    }
+}

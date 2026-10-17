@@ -1,0 +1,34 @@
+:root {
+
+  --color-primary: #22D3EE;
+  --color-secondary: #4FB4FF;
+  --color-background: #000000;
+  --color-text: #ffffff;
+  --color-text-secondary: #cccccc;
+  --color-accent-cyan: #22D3EE;
+  --button-color: #22D3EE;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #000000;
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}

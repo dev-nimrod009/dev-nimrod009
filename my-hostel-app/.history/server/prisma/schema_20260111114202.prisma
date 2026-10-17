@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  role      String   @default("landlord")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Activity  ActivityLog[]
+}
+
+model RoomClass {
+  id       Int     @id @default(autoincrement())
+  name     String  @unique
+  price    Int
+  rooms    Room[]
+}
+
+model Room {
+  id        Int      @id @default(autoincrement())
+  number    String   @unique
+  classId   Int?
+  status    String   @default("vacant")
+  tenant    Tenant?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  roomClass RoomClass? @relation(fields: [classId], references: [id])
+}
+
+model Tenant {
+  id           Int      @id @default(autoincrement())
+  name         String
+  phoneNumber  String   @unique
+  roomId       Int?     @unique
+  ledger       Ledger?
+  payments     Payment[]
+  createdAt    DateTime @default(now())
+  room         Room?    @relation(fields: [roomId], references: [id])
+}
+
+model Ledger {
+  id           Int      @id @default(autoincrement())
+  tenantId     Int      @unique
+  totalBilled  Int      @default(0)
+  currentBalance Int    @default(0)
+  tenant       Tenant   @relation(fields: [tenantId], references: [id])
+}
+
+model Payment {
+  id            Int      @id @default(autoincrement())
+  tenantId      Int
+  amount        Int
+  mpesaReceipt  String?
+  rawPayload    Json?
+  createdAt     DateTime @default(now())
+  tenant        Tenant   @relation(fields: [tenantId], references: [id])
+}
+
+model ActivityLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  action    String
+  before    Json?
+  after     Json?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}

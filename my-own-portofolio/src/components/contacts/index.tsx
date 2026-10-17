@@ -1,6 +1,6 @@
-import React from "react";
 import HeadName from "../headName/headName";
 import "./styles.scss";
+
 export default function MyContacts() {
   const socialHandles = [
     {
@@ -59,27 +59,23 @@ export default function MyContacts() {
         <button type="submit">Submit</button>
       </form>
       <div className="social_holders">
-        <div className="my_handles">
+        <div className="meta_handles">
           <p>Directly contact me through </p>
           <ul>
             {socialHandles.map((item, i) => (
               <li key={i}>
-                <span>
-                  <b>{item.name} :</b>{" "}
-                </span>
-                <span>{item.value}</span>
+                <span>{item.name} :</span>
+                <a>{item.value}</a>
               </li>
             ))}
           </ul>
         </div>
         <div className="meta_handles">
-          <p> online Platforms</p>
+          <p> Online Platforms</p>
           <ul>
             {metaHandles.map((item, i) => (
               <li key={i}>
-                <span>
-                  <b>{item.name}</b> :{" "}
-                </span>
+                <span>{item.name} :</span>
                 <a>{item.value}</a>
               </li>
             ))}

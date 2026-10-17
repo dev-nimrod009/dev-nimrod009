@@ -1,0 +1,143 @@
+.main_skills_div {
+    display: grid;
+
+    .center_wrap {
+        display: grid;
+        max-width: 1000p;
+        width: 100%;
+        margin: 0 auto;
+        gap: 0px;
+        padding: 20px 0;
+
+
+        .name_tag {
+            justify-content: grid;
+            padding: 20px 0;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+            display: relative;
+
+            p {
+                font-size: 26px;
+                color: var(--color-text);
+            }
+
+            span {
+                font-size: 20px;
+                color: var(--color-text-secondary);
+            }
+        }
+
+        .education,
+        .work_experience {
+            padding: 10px 20px;
+
+            p {
+                font-size: 30px;
+                font-weight: 700;
+                color: var(--color-text);
+                padding-bottom: 10px;
+                border-bottom: 3px solid var(--color-primary, #4F46E5);
+
+                margin-bottom: 20px;
+                margin-top: 20px;
+            }
+        }
+
+        .education {
+
+            border-radius: 12px;
+            background-color: var(--color-background);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            display: grid;
+            gap: 0.5em;
+
+            em {
+                font-weight: 200;
+                font-size: 14px;
+                color: var(--color-text-secondary);
+            }
+
+            span {
+                color: var(--color-text);
+
+                &:first-child {
+                    font-size: 18px;
+                    font-weight: 400;
+                    color: var(--color-text);
+                }
+
+                &:last-child {
+                    font-size: 20px;
+                    color: var(--color-text-secondary);
+                }
+            }
+
+
+
+        }
+
+        .work_experience {
+
+
+
+
+
+            ul {
+                display: flex;
+
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: 17px;
+                list-style: none;
+
+                li {
+                    display: grid;
+                    gap: 8px;
+                    padding: 20px;
+                    border-radius: 10px;
+                    background-color: var(--color-background);
+                    border: 1px solid rgba(15, 23, 42, 0.05);
+                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+
+                    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+                    p {
+
+
+                        font-size: 20px;
+                        font-weight: 400;
+
+                        color: var(--color-primary);
+                        margin: 0;
+                        padding: 0;
+                        border-bottom: none;
+                    }
+
+                    em {
+                        font-weight: 200;
+                        font-size: 14px;
+                        color: var(--color-text-secondary);
+                    }
+
+                    span {
+                        color: var(--color-text-secondary);
+
+                        &:first-child {
+                            font-size: 18px;
+                            font-weight: 200;
+
+                        }
+
+                        &:last-child {
+                            font-size: 22px;
+
+
+
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+}

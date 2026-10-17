@@ -1,0 +1,41 @@
+:root {
+
+  --color-primary: #22D3EE;
+  /* indigo-600 */
+  --color-secondary: #8B5CF6;
+  /* violet-500 */
+  --color-background: #000000;
+  /* gray-50 */
+  --color-text: #ffffff;
+  /* gray-800 */
+  --color-text-secondary: #6B7280;
+  /* gray-500 */
+  /* extras from notes */
+  --color-code-highlight: #14B8A6;
+  /* teal-500 */
+  --color-accent-cyan: #22D3EE;
+  /* cyan-400 */
+
+
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #000000;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}

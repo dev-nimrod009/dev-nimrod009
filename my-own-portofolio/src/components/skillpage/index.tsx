@@ -49,9 +49,9 @@ export default function MySkills() {
             {data.workExperience.map((item, i) => (
               <li key={i}>
                 <p>{item.name}</p>
+                <span>{item.cores}</span>
                 <span>{item.institution}</span>
                 <em>{item.dates}</em>
-                <span>{item.cores}</span>
               </li>
             ))}
           </ul>

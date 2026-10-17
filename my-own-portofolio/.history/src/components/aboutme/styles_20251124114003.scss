@@ -1,0 +1,91 @@
+.main_about_page {
+    display: grid;
+    align-content: center;
+    justify-content: center;
+
+    .profile_container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 2;
+
+        .profile_photo {
+            margin-top: 30px;
+            border-radius: 100px;
+            width: 11em;
+            height: 11em;
+            box-shadow: 0px 9px 20px rgba(19, 8, 8, 0.1);
+
+        }
+
+        .profile_name {
+            p {
+                font-size: 50px;
+            }
+        }
+    }
+
+    .brief_description {
+        padding: 0 100px 0 100px;
+
+
+        ul {
+            display: grid;
+            border-radius: 0.1rem 0.1rem 20px 20px;
+            box-shadow: -8px 2px 30px rgba(19, 8, 8, 0.1);
+
+            li {
+                list-style: none;
+
+                h4 {
+                    font-size: 25px;
+                    color: var(--color-text);
+                }
+
+                h6 {
+                    font-size: 20px;
+                    padding-left: 20px;
+                    color: var(--color-text-secondary);
+                }
+
+                p {
+                    display: flex;
+
+                    span:first-child {
+                        font-size: 25px;
+                        color: var(--color-text);
+                    }
+
+                    span:last-child {
+
+                        font-size: 23px;
+                        color: var(--color-text-secondary);
+                    }
+                }
+            }
+        }
+
+        ul:last-child {
+            display: grid;
+
+        }
+
+        .resume_button {
+            display: flex;
+            justify-content: center;
+            padding: 8px;
+
+            a {
+                padding: 10px;
+                font-size: 25px;
+                border-radius: 10px;
+                text-decoration: none;
+                background-color: var(--color-code-highlight);
+                color: rgb(223, 215, 215);
+                cursor: pointer;
+            }
+
+        }
+
+    }
+}

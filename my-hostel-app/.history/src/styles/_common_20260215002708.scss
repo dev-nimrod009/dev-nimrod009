@@ -1,0 +1,99 @@
+/* Common variables and base styles for the app */
+:root {
+    /* Primary theme: orange + white */
+    --bg: #ffffff;
+    --bg-light: #ffffff;
+    --text: #111111;
+    --muted: #6b6b6b;
+    --accent: #ff7a00;
+    /* orange primary */
+    --accent-contrast: #ffffff;
+    --card-bg: #ffffff;
+    --card-border-radius: 8px;
+    --danger: #ef4444;
+    --success: #34d399;
+    --warning: #f59e0b;
+}
+
+html,
+body {
+    margin: 0;
+    font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+a {
+    font-weight: 500;
+    color: var(--accent);
+    text-decoration: none;
+}
+
+a:hover {
+    /* Fallback for older browsers */
+    color: var(--accent);
+    /* Use CSS color-mix (left as a CSS function so Sass won't evaluate it) to produce a slightly darker accent when supported */
+    color: color-mix(in srgb, var(--accent) 90%, black 10%);
+    text-decoration: underline;
+}
+
+button {
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    font-size: 1em;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: var(--accent);
+    color: var(--accent-contrast);
+    cursor: pointer;
+}
+
+/* Utility classes that were commonly used from Tailwind */
+.container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.card {
+    background: var(--card-bg);
+    color: #111;
+    padding: 1rem;
+    border-radius: var(--card-border-radius);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+
+.grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.grid.cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.grid.cols-6 {
+    grid-template-columns: repeat(6, 1fr);
+}
+
+/* Simple color helpers for room state */
+.room-paid {
+    background: #34d399;
+}
+
+.room-partial {
+    background: #fbbf24;
+}
+
+.room-overdue {
+    background: #ef4444;
+}
+
+.room-vacant {
+    background: #e5e7eb;
+}

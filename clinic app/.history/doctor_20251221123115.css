@@ -1,0 +1,110 @@
+:root {
+    --primary: #2c3e50;
+    --accent: #3498db;
+    --bg: #f8f9fa;
+}
+
+body {
+    margin: 0;
+    display: flex;
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+}
+
+.sidebar {
+    width: 240px;
+    height: 100vh;
+    background: var(--primary);
+    color: white;
+    padding: 20px;
+    position: fixed;
+}
+
+.sidebar h2 {
+    color: var(--accent);
+    margin-bottom: 40px;
+}
+
+.sidebar nav a {
+    display: block;
+    color: #bdc3c7;
+    text-decoration: none;
+    padding: 15px 0;
+    border-bottom: 1px solid #34495e;
+}
+
+.sidebar nav a.active {
+    color: white;
+    font-weight: bold;
+}
+
+.content {
+    margin-left: 240px;
+    padding: 40px;
+    width: 100%;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.stats-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.card h3 {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
+
+.card p {
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.table-section {
+    background: white;
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    text-align: left;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.badge {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+}
+
+.confirmed {
+    background: #d4edda;
+    color: #155724;
+}
+
+.pending {
+    background: #fff3cd;
+    color: #856404;
+}

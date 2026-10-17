@@ -1,4 +1,5 @@
 import HeadName from "../headName/headName";
+import "./styles.scss";
 import { useState } from "react";
 export default function MyPortofolio() {
   const portofolioData = [
@@ -41,7 +42,7 @@ export default function MyPortofolio() {
       ? portofolioData
       : portofolioData.filter((item) => item.status === activeFilter);
   return (
-    <>
+    <div className="portofolio_container">
       <HeadName headName="My Portofolio" />
       <h1>This is my portofolio</h1>
       <div className="filterDetails">
@@ -66,6 +67,6 @@ export default function MyPortofolio() {
           ))}
         </ul>
       </div>
-    </>
+    </div>
   );
 }

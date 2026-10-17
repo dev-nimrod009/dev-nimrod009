@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clinic Dashboard</title>
+    <link rel="stylesheet" href="./dashboard.css" />
+  </head>
+  <body>
+    <div class="sidebar">
+      <h2>ClinicPro</h2>
+      <ul>
+        <li class="active">Dashboard</li>
+        <li>Patients</li>
+        <li>Schedules</li>
+        <li>Reports</li>
+      </ul>
+    </div>
+
+    <div class="main-content">
+      <header>
+        <div class="search-bar">
+          <input type="text" placeholder="Search patients..." />
+        </div>
+        <div class="profile">
+          <span>Welcome, <strong>Admin/Doctor</strong></span>
+        </div>
+      </header>
+
+      <section class="stats">
+        <div class="card">
+          Total Appointments:
+          <h3><?= $totalAppts; ?></h3>
+        </div>
+        <div class="card">
+          New Patients:
+          <h3><?= $newPatients; ?></h3>
+        </div>
+        <div class="card">
+          Urgent Alerts:
+          <h3 style="color: red"><?= $urgentAlerts; ?></h3>
+        </div>
+      </section>
+
+      <section class="data-table">
+        <h3>Appointment Schedule</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Patient</th>
+              <th>Doctor</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach($appointments as $appt): ?>
+            <tr>
+              <td><?= htmlspecialchars($appt['patient_name']); ?></td>
+              <td><?= htmlspecialchars($appt['doctor_name']); ?></td>
+              <td><?= $appt['appt_date']; ?></td>
+              <td>
+                <span class="status-pill <?= strtolower($appt['status']); ?>">
+                  <?= $appt['status']; ?>
+                </span>
+              </td>
+              <td>
+                <button onclick="editStatus(<?= $appt['id']; ?>)">
+                  Manage
+                </button>
+              </td>
+            </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      </section>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

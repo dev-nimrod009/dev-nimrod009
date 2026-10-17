@@ -1,0 +1,11 @@
+.room-grid {
+    padding: 1.5rem;
+}
+
+.room-grid .grid {
+    grid-template-columns: repeat(6, 1fr);
+}
+
+.room-grid .room-card {
+    margin-bottom: 0.25rem;
+}

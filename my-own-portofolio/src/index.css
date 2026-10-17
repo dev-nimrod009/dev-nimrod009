@@ -1,23 +1,12 @@
 :root {
 
-  --color-primary: #4F46E5;
-  /* indigo-600 */
-  --color-secondary: #8B5CF6;
-  /* violet-500 */
-  --color-background: #F9FAFB;
-  /* gray-50 */
-  --color-text: #1F2937;
-  /* gray-800 */
-  --color-text-secondary: #6B7280;
-  /* gray-500 */
-  /* extras from notes */
-  --color-code-highlight: #14B8A6;
-  /* teal-500 */
+  --color-primary: #22D3EE;
+  --color-secondary: #4FB4FF;
+  --color-background: #000000;
+  --color-text: #ffffff;
+  --color-text-secondary: #eeeeee;
   --color-accent-cyan: #22D3EE;
-  /* cyan-400 */
-
-
-
+  --button-color: #22D3EE;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -32,6 +21,11 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background-color: #000000;
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
 }
 
 h1 {

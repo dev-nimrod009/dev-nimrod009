@@ -1,0 +1,50 @@
+.nav_nav_nav_bar {
+    display: flex;
+    position: sticky;
+    top: 0;
+    right: 20px;
+
+
+    ul {
+        display: flex;
+        right: 0;
+        padding-left: 43rem;
+        justify-items: center;
+
+
+        li {
+            list-style: none;
+            gap: 10px;
+            padding: 10px;
+            outline: none;
+
+
+            a {
+                font-weight: 400;
+                position: relative;
+                display: inline-block;
+                color: var(--color-text);
+                text-decoration: none;
+                cursor: pointer;
+
+                &::after {
+                    content: '';
+                    position: absolute;
+                    bottom: -3px;
+                    left: 0;
+                    width: 0;
+                    height: 3px;
+                    background-color: blue;
+                    transition: width 0.3s ease-out;
+                }
+
+                &:hover {
+                    &::after {
+                        width: 100%;
+                    }
+
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,32 @@
+.dashboard {
+    padding: 1.5rem;
+}
+
+.dashboard .summary {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.dashboard .summary .card {
+    flex: 1;
+}
+
+.dashboard .room-preview {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0.5rem;
+}
+
+.room-group {
+    margin-top: 1.5rem;
+}
+
+.room-group h4 {
+    margin: 0.5rem 0;
+    font-weight: 600;
+}
+
+.room-group .room-preview {
+    grid-template-columns: repeat(8, 1fr);
+}

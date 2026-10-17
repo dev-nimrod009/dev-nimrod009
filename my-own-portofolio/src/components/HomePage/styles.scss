@@ -33,7 +33,7 @@
             padding: 12px 20px;
             font-size: clamp(18px, 2.6vw, 32px);
             border-radius: 10px;
-            background-color: var(--color-accent-cyan);
+            background-color: var(--button-color);
             color: var(--color-text, #0F172A);
             box-shadow: 0 8px 24px rgba(2, 6, 23, 0.08);
             transition: transform .12s ease, box-shadow .12s ease, opacity .12s ease;

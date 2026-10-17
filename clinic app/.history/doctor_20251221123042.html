@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Clinic Management System</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="sidebar">
+      <h2>Clinic OS</h2>
+      <nav>
+        <a href="#" class="active">Dashboard</a>
+        <a href="#">Doctors</a>
+        <a href="#">Patients</a>
+        <a href="#">Settings</a>
+      </nav>
+    </div>
+
+    <div class="content">
+      <header>
+        <h1>Admin & Doctor Portal</h1>
+        <div id="clock"></div>
+      </header>
+
+      <div class="stats-container">
+        <div class="card">
+          <h3>Total Doctors</h3>
+          <p><?php echo $doc_count; ?></p>
+        </div>
+        <div class="card">
+          <h3>Today's Appointments</h3>
+          <p><?php echo $appt_count; ?></p>
+        </div>
+      </div>
+
+      <section class="table-section">
+        <h2>Live Appointments</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Patient</th>
+              <th>Assigned Doctor</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php while($row = $appointments->fetch_assoc()): ?>
+            <tr>
+              <td><?= $row['patient_name'] ?></td>
+              <td><?= $row['doc_name'] ?></td>
+              <td>
+                <span class="badge <?= strtolower($row['status']) ?>"
+                  ><?= $row['status'] ?></span
+                >
+              </td>
+              <td>
+                <button
+                  class="btn-action"
+                  onclick="manageAppt(<?= $row['id'] ?>)"
+                >
+                  Edit
+                </button>
+              </td>
+            </tr>
+            <?php endwhile; ?>
+          </tbody>
+        </table>
+      </section>
+    </div>
+    <script src="doctor.js"></script>
+  </body>
+</html>

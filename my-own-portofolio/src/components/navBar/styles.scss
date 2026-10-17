@@ -3,7 +3,7 @@
     position: sticky;
     top: 0;
     right: 20px;
-
+    min-width: 100vw;
 
     ul {
         display: flex;
@@ -20,10 +20,11 @@
 
 
             a {
-                font-size: 25px;
+                font-weight: 400;
+                font-size: 20px;
                 position: relative;
                 display: inline-block;
-                color: var(--color-text);
+                color: var(--color-primary);
                 text-decoration: none;
                 cursor: pointer;
 
@@ -34,7 +35,7 @@
                     left: 0;
                     width: 0;
                     height: 3px;
-                    background-color: blue;
+                    background-color: var(--color-text);
                     transition: width 0.3s ease-out;
                 }
 
