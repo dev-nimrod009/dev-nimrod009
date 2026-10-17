@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react'
 import { STATIONS, OFFICERS, OFFENSE_TYPES, AUTH_USERS, generateMockDetainees, generateMockTransfers, generateMockAuditTrail, generateMockBreachLog } from './mockData'
 
 const DataContext = createContext(null)
@@ -43,6 +43,8 @@ export function DataProvider({ children }) {
   const [shiftActive, setShiftActive] = useState(false)
   const [shiftOfficer, setShiftOfficer] = useState(null)
   const [currentUser, setCurrentUser] = useState(null)
+  const [pendingSms, setPendingSms] = useState(null)
+  const lastActivityRef = useRef(Date.now())
 
   useEffect(() => {
     const stored = loadFromStorage()
@@ -103,16 +105,64 @@ export function DataProvider({ children }) {
     }, ...prev])
   }, [])
 
-  const login = useCallback((username, password) => {
-    const user = AUTH_USERS.find((u) => u.username === username && u.password === password)
+  const login = useCallback((username) => {
+    const user = AUTH_USERS.find((u) => u.username === username)
     if (user) {
       const session = { username: user.username, role: user.role, name: user.name, serviceNo: user.serviceNo }
       setCurrentUser(session)
-      addAuditEntry(`${user.name} logged in`, user.name, { officerServiceNo: user.serviceNo, prevState: 'Logged out', newState: `Logged in (${user.role})` })
-      return { success: true, role: user.role, name: user.name }
+      addAuditEntry(`${user.name} logged in via identifier authentication`, user.name, { officerServiceNo: user.serviceNo, prevState: 'Logged out', newState: `Logged in (${user.role})` })
+      return { success: true, role: user.role, name: user.name, requiresSms: false }
     }
     return { success: false }
   }, [addAuditEntry])
+
+  const requestSmsCode = useCallback((username) => {
+    const user = AUTH_USERS.find((u) => u.username === username)
+    if (!user) return { success: false }
+    const code = String(Math.floor(100000 + Math.random() * 900000))
+    setPendingSms({ username, code, requestedAt: Date.now() })
+    addAuditEntry(`SMS verification code sent to ${user.name} (${user.role}) for two-factor authentication`, user.name, { officerServiceNo: user.serviceNo, prevState: 'Identity Selected', newState: 'Awaiting SMS Verification' })
+    return { success: true, phone: user.phone, code }
+  }, [addAuditEntry])
+
+  const verifySmsLogin = useCallback((username, code) => {
+    if (!pendingSms || pendingSms.username !== username) return { success: false, message: 'No verification code was requested. Start again.' }
+    if (Date.now() - pendingSms.requestedAt > 5 * 60 * 1000) {
+      setPendingSms(null)
+      return { success: false, message: 'Verification code expired. Request a new one.' }
+    }
+    if (pendingSms.code !== code.trim()) return { success: false, message: 'Incorrect verification code. Please try again.' }
+    const user = AUTH_USERS.find((u) => u.username === username)
+    if (!user) return { success: false, message: 'Unknown user' }
+    setPendingSms(null)
+    const session = { username: user.username, role: user.role, name: user.name, serviceNo: user.serviceNo }
+    setCurrentUser(session)
+    addAuditEntry(`${user.name} logged in via SMS two-factor authentication`, user.name, { officerServiceNo: user.serviceNo, prevState: 'Awaiting SMS Verification', newState: `Logged in (${user.role})` })
+    return { success: true, role: user.role, name: user.name }
+  }, [pendingSms, addAuditEntry])
+
+  const sessionTimeoutMinutes = currentUser && (currentUser.role === 'ocpd' || currentUser.role === 'ipoa') ? 5 : 15
+
+  useEffect(() => {
+    const updateActivity = () => { lastActivityRef.current = Date.now() }
+    const events = ['mousedown', 'mousemove', 'keydown', 'scroll', 'touchstart']
+    events.forEach((e) => window.addEventListener(e, updateActivity, { passive: true }))
+    return () => events.forEach((e) => window.removeEventListener(e, updateActivity))
+  }, [])
+
+  useEffect(() => {
+    if (!currentUser) return
+    const interval = setInterval(() => {
+      if (Date.now() - lastActivityRef.current > sessionTimeoutMinutes * 60 * 1000) {
+        const expired = currentUser
+        addAuditEntry(`${expired.name} automatically signed out after ${sessionTimeoutMinutes} minutes of inactivity`, expired.name, { officerServiceNo: expired.serviceNo, prevState: `Logged in (${expired.role})`, newState: 'Session Expired (Inactivity)' })
+        setCurrentUser(null)
+        addToast(`Session expired after ${sessionTimeoutMinutes} minutes of inactivity. Please sign in again.`, 'error')
+        lastActivityRef.current = Date.now()
+      }
+    }, 10000)
+    return () => clearInterval(interval)
+  }, [currentUser, sessionTimeoutMinutes, addAuditEntry, addToast])
 
   const logout = useCallback(() => {
     if (currentUser) {
@@ -276,7 +326,7 @@ export function DataProvider({ children }) {
     toasts, addToast, removeToast, addAuditEntry, addDetainee, updateDetaineeStatus,
     approveTransfer, exportAuditCSV, exportAuditPDF,
     shiftActive, shiftOfficer, activateShift, deactivateShift,
-    currentUser, login, logout,
+    currentUser, login, logout, requestSmsCode, verifySmsLogin, sessionTimeoutMinutes,
     processBailPayment, releaseOnBail, seniorManualRelease,
     initiateTransfer, ocpdAcceptTransfer, completeTransfer,
   }
