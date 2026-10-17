@@ -6,10 +6,10 @@ import ShiftActivationModal from './ShiftActivationModal'
 
 const navItems = [
   { to: '/', label: 'Public Portal', icon: Globe, end: true, public: true },
-  { to: '/field-officer', label: 'Field Officer', icon: Shield },
-  { to: '/desk-officer', label: 'Desk Booking', icon: ClipboardList },
-  { to: '/command', label: 'Command', icon: LayoutDashboard },
-  { to: '/ipoa', label: 'IPOA', icon: Eye },
+  { to: '/field-officer', label: 'Field Officer', icon: Shield, role: 'field_officer' },
+  { to: '/desk-officer', label: 'Desk Booking', icon: ClipboardList, role: 'ocs' },
+  { to: '/command', label: 'Command', icon: LayoutDashboard, role: 'ocpd' },
+  { to: '/ipoa', label: 'IPOA', icon: Eye, role: 'ipoa' },
 ]
 
 export default function Navbar() {
@@ -37,7 +37,7 @@ export default function Navbar() {
             </div>
 
             <div className="hidden md:flex items-center gap-1">
-              {navItems.map((item) => {
+              {navItems.filter((item) => item.public || (currentUser && item.role === currentUser.role)).map((item) => {
                 const Icon = item.icon
                 return (
                   <NavLink
@@ -97,7 +97,7 @@ export default function Navbar() {
           </div>
 
           <div className="md:hidden flex items-center gap-1 overflow-x-auto pb-2 -mx-4 px-4">
-            {navItems.map((item) => {
+            {navItems.filter((item) => item.public || (currentUser && item.role === currentUser.role)).map((item) => {
               const Icon = item.icon
               return (
                 <NavLink

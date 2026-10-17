@@ -280,10 +280,10 @@ function generateMockBreachLog() {
 }
 
 const AUTH_USERS = [
-  { username: 'field', password: 'field123', role: 'field_officer', name: 'Patrol Officer', serviceNo: '2341' },
-  { username: 'ocs', password: 'ocs123', role: 'ocs', name: 'OCS Chuka', serviceNo: '2341' },
-  { username: 'ocpd', password: 'ocpd123', role: 'ocpd', name: 'OCPD Tharaka Nithi', serviceNo: '0001' },
-  { username: 'ipoa', password: 'ipoa123', role: 'ipoa', name: 'IPOA Inspector', serviceNo: 'IPOA-001' },
+  { username: 'field', role: 'field_officer', name: 'Patrol Officer', serviceNo: '2341' },
+  { username: 'ocs', role: 'ocs', name: 'OCS Chuka', serviceNo: '2341' },
+  { username: 'ocpd', role: 'ocpd', name: 'OCPD Tharaka Nithi', serviceNo: '0001', phone: '+254 700 111 001', requiresSms: true },
+  { username: 'ipoa', role: 'ipoa', name: 'IPOA Inspector', serviceNo: 'IPOA-001', phone: '+254 700 111 002', requiresSms: true },
 ]
 
 export { STATIONS, OFFICERS, OFFENSE_TYPES, AUTH_USERS, generateMockDetainees, generateMockTransfers, generateMockAuditTrail, generateMockBreachLog }
