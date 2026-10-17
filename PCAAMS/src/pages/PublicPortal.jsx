@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { Search, MapPin, Phone, Calendar, FileText, Printer, Shield, Scale, Info, User, Gavel, CheckCircle2, XCircle } from 'lucide-react'
+import { Search, MapPin, Phone, Calendar, FileText, Printer, Shield, Scale, Info, User, Gavel, CheckCircle2, XCircle, BookOpen } from 'lucide-react'
 import { useData } from '../data/DataContext'
+import LegalReferencePanel from '../components/LegalReferencePanel'
 
 export default function PublicPortal() {
   const { detainees, stations, officers } = useData()
@@ -164,6 +165,15 @@ export default function PublicPortal() {
                   <p className="text-sm font-semibold text-slate-800">{officer ? stations.find((s) => s.id === officer.stationId)?.name : 'N/A'}</p>
                 </div>
               </div>
+            </div>
+
+            {/* Legal Reference */}
+            <div className="bg-white rounded-lg border border-gray-200 p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <BookOpen className="w-5 h-5 text-slate-700" />
+                <p className="text-sm font-bold text-slate-900">The Law on This Charge</p>
+              </div>
+              <LegalReferencePanel offenseType={result.offenseType} />
             </div>
 
             {/* Criminal History */}

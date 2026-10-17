@@ -1,7 +1,8 @@
 import { useState, useMemo } from 'react'
-import { LayoutDashboard, AlertTriangle, Clock, Users, Building2, ArrowRightLeft, Check, History, Lock, FileDown, FileText, Shield, Phone, AlertCircle, XCircle } from 'lucide-react'
+import { LayoutDashboard, AlertTriangle, Clock, Users, Building2, ArrowRightLeft, Check, History, Lock, FileDown, FileText, Shield, Phone, AlertCircle, XCircle, Scale } from 'lucide-react'
 import { useData } from '../data/DataContext'
 import Modal from '../components/Modal'
+import LegalReferencePanel from '../components/LegalReferencePanel'
 import CountdownTimer, { getHoursHeld, getTimerColor, formatDuration, formatRemaining } from '../components/CountdownTimer'
 
 export default function CommandDashboard() {
@@ -9,6 +10,7 @@ export default function CommandDashboard() {
   const [mode, setMode] = useState('ocs')
   const [acceptTransferModal, setAcceptTransferModal] = useState(null)
   const [manualReleaseModal, setManualReleaseModal] = useState(null)
+  const [lawModal, setLawModal] = useState(null)
 
   const stationId = 'chuka'
   const stationDetainees = detainees.filter((d) => d.stationId === stationId)
@@ -76,7 +78,7 @@ export default function CommandDashboard() {
       </div>
 
       {mode === 'ocs' ? (
-        <OCSView inCustody={inCustody} avgTime={avgTime} pendingBailCount={pendingBail.length} impendingViolations={impendingViolations} stationName="Chuka Police Station" onManualRelease={handleManualRelease} />
+        <OCSView inCustody={inCustody} avgTime={avgTime} pendingBailCount={pendingBail.length} impendingViolations={impendingViolations} stationName="Chuka Police Station" onManualRelease={handleManualRelease} lawModal={lawModal} setLawModal={setLawModal} />
       ) : (
         <OCPDView detainees={detainees} transfers={transfers} stations={stations} onAcceptTransfer={handleAcceptTransfer} onCompleteTransfer={handleCompleteTransfer} transferStatusBadge={transferStatusBadge} />
       )}
@@ -177,7 +179,7 @@ export default function CommandDashboard() {
   )
 }
 
-function OCSView({ inCustody, avgTime, pendingBailCount, impendingViolations, stationName, onManualRelease }) {
+function OCSView({ inCustody, avgTime, pendingBailCount, impendingViolations, stationName, onManualRelease, lawModal, setLawModal }) {
   return (
     <div className="space-y-6">
       {impendingViolations.length > 0 && (
@@ -211,6 +213,7 @@ function OCSView({ inCustody, avgTime, pendingBailCount, impendingViolations, st
                   <span className={`text-xs font-semibold ${labelClass[color]}`}>{formatRemaining(hours)} remaining</span>
                 </div>
                 <div className="mt-2 text-xs text-slate-500">Offense: {d.offenseType} | Bail: {d.bailTerms}</div>
+                <button onClick={() => setLawModal(d)} className="mt-2 w-full text-xs bg-slate-900 text-white hover:bg-slate-800 px-2 py-1.5 rounded font-medium transition-colors flex items-center justify-center gap-1"><Scale className="w-3 h-3" />View Charge Law</button>
                 {d.cashBail > 0 && !d.bailPaid && (
                   <button onClick={() => onManualRelease(d)} className="mt-2 w-full text-xs bg-red-100 text-red-700 hover:bg-red-200 px-2 py-1 rounded font-medium transition-colors">Senior Manual Release</button>
                 )}
@@ -220,6 +223,21 @@ function OCSView({ inCustody, avgTime, pendingBailCount, impendingViolations, st
           {inCustody.length === 0 && <div className="col-span-full p-8 text-center text-slate-500 text-sm bg-white rounded-xl border border-gray-200">No detainees currently in cells.</div>}
         </div>
       </div>
+
+      <Modal open={!!lawModal} onClose={() => setLawModal(null)} title="Legal Reference - Charge & Rights">
+        {lawModal && (
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="bg-slate-900 p-2.5 rounded-lg"><Scale className="w-5 h-5 text-white" /></div>
+              <div>
+                <p className="font-semibold text-slate-900">{lawModal.fullName}</p>
+                <p className="text-xs text-slate-500 font-mono">{lawModal.obNumber} — Charged with: {lawModal.offenseType}</p>
+              </div>
+            </div>
+            <LegalReferencePanel offenseType={lawModal.offenseType} />
+          </div>
+        )}
+      </Modal>
     </div>
   )
 }

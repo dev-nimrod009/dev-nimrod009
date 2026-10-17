@@ -1,7 +1,8 @@
 import { useState, useMemo } from 'react'
-import { ClipboardList, UserPlus, DoorOpen, Send, CheckCircle2, Gavel, ArrowRightLeft, Lock, Filter, AlertCircle, CreditCard, XCircle, Shield, Phone } from 'lucide-react'
+import { ClipboardList, UserPlus, DoorOpen, Send, CheckCircle2, Gavel, ArrowRightLeft, Lock, Filter, AlertCircle, CreditCard, XCircle, Shield, Phone, Scale } from 'lucide-react'
 import { useData } from '../data/DataContext'
 import Modal from '../components/Modal'
+import LegalReferencePanel from '../components/LegalReferencePanel'
 import CountdownTimer, { getHoursHeld, getTimerColor, formatDuration, formatRemaining } from '../components/CountdownTimer'
 
 function calculateAge(dob) {
@@ -35,6 +36,7 @@ export default function DeskOfficer() {
   const [bailModal, setBailModal] = useState(null)
   const [transferModal, setTransferModal] = useState(null)
   const [courtModal, setCourtModal] = useState(null)
+  const [lawModal, setLawModal] = useState(null)
   const [errors, setErrors] = useState({})
   const [ledgerFilter, setLedgerFilter] = useState('all')
   const [ledgerSearch, setLedgerSearch] = useState('')
@@ -188,6 +190,9 @@ export default function DeskOfficer() {
               <FormField label="Arrest Location" value={form.arrestLocation} onChange={(v) => setForm({ ...form, arrestLocation: v })} />
               <SelectField label="Offense Type" value={form.offenseType} onChange={(v) => setForm({ ...form, offenseType: v })} options={offenseTypes} />
               <div className="sm:col-span-2">
+                <LegalReferencePanel offenseType={form.offenseType} compact />
+              </div>
+              <div className="sm:col-span-2">
                 <label className="block text-xs font-semibold text-slate-700 mb-1">Offense Summary</label>
                 <textarea value={form.offenseSummary} onChange={(e) => setForm({ ...form, offenseSummary: e.target.value })} placeholder="Brief description of the alleged offense..." rows={2} className="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none" />
               </div>
@@ -248,6 +253,7 @@ export default function DeskOfficer() {
                       <td className="px-3 py-3"><CountdownTimer bookingDate={d.bookingDate} showRemaining /></td>
                       <td className="px-3 py-3">
                         <div className="flex flex-wrap gap-1 justify-end">
+                          <button onClick={() => setLawModal(d)} className="text-xs bg-slate-900 text-white hover:bg-slate-800 px-2 py-1 rounded font-medium transition-colors flex items-center gap-1"><Scale className="w-3 h-3" />Law</button>
                           <button onClick={() => handleBailAction(d)} className="text-xs bg-green-100 text-green-700 hover:bg-green-200 px-2 py-1 rounded font-medium transition-colors">Bail</button>
                           <button onClick={() => setCourtModal({ detainee: d })} className="text-xs bg-blue-100 text-blue-700 hover:bg-blue-200 px-2 py-1 rounded font-medium transition-colors">Court</button>
                           <button onClick={() => handleTransferAction(d)} className="text-xs bg-purple-100 text-purple-700 hover:bg-purple-200 px-2 py-1 rounded font-medium transition-colors">Transfer</button>
@@ -368,6 +374,22 @@ export default function DeskOfficer() {
               <Phone className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
               <p className="text-xs text-slate-700">An SMS notification will be sent to the OCPD of the destination station. The transfer will only proceed after the OCPD accepts the request. The detainee's details will then be sent to the receiving station's cell ledger.</p>
             </div>
+          </div>
+        )}
+      </Modal>
+
+      {/* Legal Reference Modal */}
+      <Modal open={!!lawModal} onClose={() => setLawModal(null)} title="Legal Reference - Charge & Rights">
+        {lawModal && (
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="bg-slate-900 p-2.5 rounded-lg"><Scale className="w-5 h-5 text-white" /></div>
+              <div>
+                <p className="font-semibold text-slate-900">{lawModal.fullName}</p>
+                <p className="text-xs text-slate-500 font-mono">{lawModal.obNumber} — Charged with: {lawModal.offenseType}</p>
+              </div>
+            </div>
+            <LegalReferencePanel offenseType={lawModal.offenseType} />
           </div>
         )}
       </Modal>
