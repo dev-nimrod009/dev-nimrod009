@@ -1,0 +1,2 @@
+-- See the full seed content in the repository history; seeds the 68 rooms,
+-- four price-tier room classes, demo tenants, rent bills, and payments.
