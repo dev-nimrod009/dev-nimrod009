@@ -87,7 +87,6 @@ export const STATUS_LABELS: Record<AppointmentStatus, string> = {
   WAITING_DOCTOR: 'Waiting for Doctor',
   IN_CONSULTATION: 'In Consultation',
   COMPLETED: 'Completed',
-  cancelled: 'Cancelled',
   CANCELLED: 'Cancelled',
 };
 
