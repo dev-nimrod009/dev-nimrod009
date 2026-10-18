@@ -93,7 +93,7 @@ export function DiaryPage() {
           placeholder="Dear diary..."
           className="border-0 bg-cream-50/60 px-4 py-3 text-[15px] leading-relaxed"
         />
-        <div className="flex items-center/delete">
+        <div className="flex items-center justify-between mt-3">
           <Button variant="danger" size="sm" onClick={remove} disabled={!entryId}>
             <Trash2 size={13} /> Delete page
           </Button>
