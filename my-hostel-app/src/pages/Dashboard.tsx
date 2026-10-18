@@ -1,146 +1,116 @@
-import { useEffect, useState } from "react";
-import RoomCard from "../components/RoomCard";
-import { fetchRooms } from "../lib/api";
-import mockRooms from "../data/mockRooms";
-import "./Dashboard.scss";
-
-type Room = {
-  number: string;
-  status?: "paid" | "partial" | "vacant" | "overdue";
-  price?: number;
-};
+import { useEffect, useMemo, useState } from 'react';
+import { fetchRoomGroups } from '../lib/data';
+import type { RoomGroup } from '../lib/supabase';
 
 export default function Dashboard() {
-  const [groups, setGroups] = useState<Record<string, any>>({});
+  const [groups, setGroups] = useState<RoomGroup[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedFloor, setSelectedFloor] = useState<string | null>(null);
-  const [query, setQuery] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let mounted = true;
-    setLoading(true);
-    fetchRooms(
-      selectedFloor ? { floor: selectedFloor, q: query } : { q: query },
-    )
-      .then((data) => {
-        if (!mounted) return;
-        setGroups(data);
-      })
-      .catch((_e) => {
-        // fallback to client-side mock data for a reliable UX when backend isn't available
-        if (!mounted) return;
-        setGroups(mockRooms as any);
-      })
+    fetchRoomGroups()
+      .then(setGroups)
+      .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
-    return () => {
-      mounted = false;
-    };
-  }, [selectedFloor, query]);
+  }, []);
 
-  const totalRooms = Object.values(groups).flatMap(
-    (g: any) => g.rooms || [],
-  ).length;
-  const occupied = Object.values(groups)
-    .flatMap((g: any) => g.rooms || [])
-    .filter((r: any) => r.tenant || (r.status && r.status !== "vacant")).length;
-  const totalRevenue = Object.values(groups).reduce(
-    (sum: number, g: any) => sum + ((g.stats && g.stats.revenue) || 0),
-    0,
-  );
-  const totalOutstanding = Object.values(groups)
-    .flatMap((g: any) => g.rooms || [])
-    .reduce((s: number, r: any) => s + (r.balance || 0), 0);
+  const totals = useMemo(() => {
+    const totalRooms = groups.reduce((s, g) => s + g.stats.totalRooms, 0);
+    const occupied = groups.reduce((s, g) => s + g.stats.occupied, 0);
+    const revenue = groups.reduce((s, g) => s + g.stats.revenue, 0);
+    const occupancy = totalRooms ? Math.round((occupied / totalRooms) * 100) : 0;
+    return { totalRooms, occupied, revenue, occupancy };
+  }, [groups]);
+
+  if (loading) return <p className="text-neutral-500">Loading dashboard…</p>;
+  if (error) return <p className="text-red-600">Could not load data: {error}</p>;
 
   return (
-    <div className="dashboard">
-      <h2 className="page-title">Dashboard</h2>
-      <div className="summary">
-        <div className="card">Total Revenue: KES {totalRevenue}</div>
-        <div className="card">Outstanding: KES {totalOutstanding}</div>
-        <div className="card">
-          Rooms: {occupied}/{totalRooms || "—"}
+    <div>
+      <h1 className="text-2xl font-bold text-neutral-900 mb-6">Dashboard</h1>
+
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 mb-8">
+        <div className="card p-5">
+          <p className="text-sm text-neutral-500">Total Revenue</p>
+          <p className="mt-1 text-2xl font-bold text-neutral-900">
+            KES {totals.revenue.toLocaleString()}
+          </p>
+        </div>
+        <div className="card p-5">
+          <p className="text-sm text-neutral-500">Rooms Occupied</p>
+          <p className="mt-1 text-2xl font-bold text-neutral-900">
+            {totals.occupied}/{totals.totalRooms}
+          </p>
+        </div>
+        <div className="card p-5">
+          <p className="text-sm text-neutral-500">Occupancy</p>
+          <p className="mt-1 text-2xl font-bold text-neutral-900">{totals.occupancy}%</p>
+        </div>
+        <div className="card p-5">
+          <p className="text-sm text-neutral-500">Vacant Rooms</p>
+          <p className="mt-1 text-2xl font-bold text-neutral-900">
+            {totals.totalRooms - totals.occupied}
+          </p>
         </div>
       </div>
 
-      <div className="controls">
-        <label>
-          Filter floor:
-          <select
-            value={selectedFloor || ""}
-            onChange={(e) => setSelectedFloor(e.target.value || null)}
-          >
-            <option value="">All</option>
-            <option>Underground</option>
-            <option>Ground Floor</option>
-            <option>First Floor</option>
-            <option>Second Floor</option>
-          </select>
-        </label>
-        <label style={{ marginLeft: 12 }}>
-          Search room:
-          <input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="e.g. A101 or U005"
-          />
-        </label>
-      </div>
+      <div className="space-y-6">
+        {groups.map((g) => (
+          <section key={g.className} className="card overflow-hidden">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-neutral-200 bg-neutral-50 px-5 py-4">
+              <div>
+                <h2 className="font-semibold text-neutral-900">{g.className}</h2>
+                <p className="text-sm text-neutral-500">
+                  KES {g.price.toLocaleString()} / month · {g.stats.occupied} of{' '}
+                  {g.stats.totalRooms} occupied ({g.stats.occupancyPercent}%)
+                </p>
+              </div>
+              <div className="h-2 w-32 overflow-hidden rounded-full bg-neutral-200">
+                <div
+                  className="h-full rounded-full bg-brand-500 transition-all"
+                  style={{ width: `${g.stats.occupancyPercent}%` }}
+                />
+              </div>
+            </div>
 
-      {loading && <div>Loading rooms...</div>}
-
-      {!loading && (
-        <div>
-          {["Underground", "Ground Floor", "First Floor", "Second Floor"]
-            .filter((k) => groups[k])
-            .map((className) => ({ className, data: groups[className] }))
-            .map(({ className, data }) => (
-              <section className="room-group" key={className}>
-                <h4>
-                  {className} — {data.stats?.totalRooms || data.rooms.length}{" "}
-                  rooms
-                </h4>
-                <div className="stats">
-                  Occupied: {data.stats?.occupied || 0} (
-                  {data.stats?.occupancyPercent || 0}%) — Revenue: KES{" "}
-                  {data.stats?.revenue || 0}
-                </div>
-
-                <table className="room-table">
-                  <thead>
-                    <tr>
-                      <th>Room</th>
-                      <th>Tenant</th>
-                      <th>Phone</th>
-                      <th>Reg #</th>
-                      <th>Paid</th>
-                      <th>Balance</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.rooms.map((r: any) => (
-                      <tr key={r.number}>
-                        <td>{r.number}</td>
-                        <td>{r.tenant?.name || "—"}</td>
-                        <td>{r.tenant?.phoneNumber || "—"}</td>
-                        <td>
-                          {r.tenant?.idNumber || r.tenant?.idNumber || "—"}
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-neutral-200 text-left text-neutral-500">
+                    <th className="px-5 py-3 font-medium">Room</th>
+                    <th className="px-5 py-3 font-medium">Status</th>
+                    <th className="px-5 py-3 font-medium">Tenant</th>
+                    <th className="px-5 py-3 font-medium">Phone</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {g.rooms.map((room) => {
+                    const tenant = room.tenants?.[0];
+                    return (
+                      <tr key={room.id} className="border-b border-neutral-100 last:border-0">
+                        <td className="px-5 py-3 font-medium text-neutral-900">{room.number}</td>
+                        <td className="px-5 py-3">
+                          <span
+                            className={`inline-flex rounded-full px-2 py-0.5 text-xs font-semibold ${
+                              room.status === 'occupied'
+                                ? 'bg-brand-100 text-brand-800'
+                                : 'bg-neutral-100 text-neutral-600'
+                            }`}
+                          >
+                            {room.status === 'occupied' ? 'Occupied' : 'Vacant'}
+                          </span>
                         </td>
-                        <td>
-                          {r.paid != null
-                            ? `KES ${r.paid}`
-                            : r.paidAmount
-                              ? `KES ${r.paidAmount}`
-                              : "—"}
-                        </td>
-                        <td>{r.balance != null ? `KES ${r.balance}` : "—"}</td>
+                        <td className="px-5 py-3 text-neutral-700">{tenant?.name ?? '—'}</td>
+                        <td className="px-5 py-3 text-neutral-500">{tenant?.phone_number ?? '—'}</td>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </section>
-            ))}
-        </div>
-      )}
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        ))}
+      </div>
     </div>
   );
 }
