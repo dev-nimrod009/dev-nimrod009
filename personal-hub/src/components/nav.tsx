@@ -68,14 +68,15 @@ export const NAV_GROUPS: { title: string; items: NavItem[] }[] = [
 interface SidebarProps {
   active: SectionId;
   onNavigate: (id: SectionId) => void;
+  compact?: boolean;
 }
 
-export function Sidebar({ active, onNavigate }: SidebarProps) {
+export function Sidebar({ active, onNavigate, compact = false }: SidebarProps) {
   return (
-    <nav className="p-4 space-y-6">
+    <nav className={cn("p-4", compact ? "space-y-3" : "space-y-6")}>
       {NAV_GROUPS.map((group) => (
         <div key={group.title}>
-          <p className="text-[10px] font-semibold text-ink-500/70 uppercase tracking-widest px-3 mb-2">{group.title}</p>
+          <p className={cn("font-semibold text-ink-500/70 uppercase tracking-widest px-3 mb-2", compact ? "text-[9px]" : "text-[10px]")}>{group.title}</p>
           <ul className="space-y-1">
             {group.items.map((item) => {
               const Icon = item.icon;
@@ -85,7 +86,7 @@ export function Sidebar({ active, onNavigate }: SidebarProps) {
                   <button
                     onClick={() => onNavigate(item.id)}
                     className={cn(
-                      "w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200",
+                      cn("w-full flex items-center gap-3 px-3 rounded-xl font-medium transition-all duration-200", compact ? "py-2 text-[13px]" : "py-2.5 text-sm"),
                       isActive
                         ? "bg-sage-500 text-white shadow-sm"
                         : "text-ink-600 hover:bg-cream-100 hover:text-ink-800"

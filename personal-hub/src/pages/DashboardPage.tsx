@@ -1,11 +1,19 @@
 import { useEffect, useState } from "react";
 import { Bell, ClipboardList, CloudOff, RefreshCw, CupSoda, Smile, Sparkles } from "lucide-react";
 import { listDayPlanner, listReminders, listHabits, listHabitLogs, listMoods, listWater, onSyncStatus, toggleHabitLog, upsertWater } from "../lib/data";
+import { useAuth } from "../lib/auth";
 import type { DayPlanTask, Habit, HabitLog, Mood, Reminder, WaterIntake } from "../lib/types";
 import { Button } from "../components/ui";
 import { formatDay, todayISO } from "../lib/utils";
 
+function userNameFromSession(user: { user_metadata?: Record<string, unknown>; email?: string } | null): string {
+  const metadataName = typeof user?.user_metadata?.full_name === "string" ? user.user_metadata.full_name : "";
+  const name = metadataName || (typeof user?.user_metadata?.name === "string" ? user.user_metadata.name : "");
+  return (name || user?.email?.split("@")[0] || "").trim().split(/\s+/)[0] ?? "";
+}
+
 export function DashboardPage({ onNavigate }: { onNavigate: (id: string) => void }) {
+  const { user } = useAuth();
   const [sync, setSync] = useState<{ active: boolean; pending: number }>({ active: false, pending: 0 });
   const [tasks, setTasks] = useState<DayPlanTask[]>([]);
   const [reminders, setReminders] = useState<Reminder[]>([]);
@@ -75,13 +83,14 @@ export function DashboardPage({ onNavigate }: { onNavigate: (id: string) => void
     if (h < 18) return "Good afternoon";
     return "Good evening";
   })();
+  const displayName = userNameFromSession(user);
 
   return (
     <div className="animate-fade-up">
       <div className="mb-8">
         <p className="text-sm text-ink-500">{formatDay(today)}</p>
         <h2 className="font-display text-3xl sm:text-4xl font-semibold text-ink-800 mt-1 flex items-center gap-3">
-          {greeting} <Sparkles size={26} className="text-honey-500" />
+          {greeting}{displayName ? `, ${displayName}` : ""} <Sparkles size={26} className="text-honey-500" />
         </h2>
       </div>
 

@@ -99,6 +99,14 @@ export interface Goal {
   updated_at: string;
 }
 
+export interface SavedQuote {
+  id: string;
+  text: string;
+  author: string;
+  kind: string;
+  created_at: string;
+}
+
 export interface InboxItem {
   id: string;
   content: string;
