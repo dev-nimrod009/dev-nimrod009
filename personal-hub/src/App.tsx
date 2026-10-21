@@ -110,8 +110,8 @@ export default function App() {
           </button>
         </div>
         {menuOpen && (
-          <div className="border-t border-cream-200 max-h-[70vh] overflow-y-auto">
-            <Sidebar active={section} onNavigate={navigate} />
+          <div className="absolute right-3 top-full mt-2 w-[min(33vw,17rem)] min-w-[12rem] max-h-[68vh] overflow-y-auto rounded-2xl border border-cream-200 bg-white shadow-2xl">
+            <Sidebar active={section} onNavigate={navigate} compact />
           </div>
         )}
       </header>

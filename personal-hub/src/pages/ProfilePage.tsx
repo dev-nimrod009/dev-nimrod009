@@ -76,6 +76,34 @@ export function ProfilePage() {
     if (result.error) setError(result.error);
   };
 
+  const uploadPhoto = (file: File | undefined) => {
+    if (!file || !user) return;
+    if (!file.type.startsWith("image/")) {
+      setError("Please choose an image file.");
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      setError("Profile photos must be 2 MB or smaller.");
+      return;
+    }
+    setSaving(true);
+    void (async () => {
+      try {
+        const path = `${user.id}/avatar-${Date.now()}.${file.type.split("/")[1] || "jpg"}`;
+        const { error: uploadError } = await import("../lib/supabase").then(({ supabase }) => supabase.storage.from("profile-photos").upload(path, file, { upsert: true, contentType: file.type }));
+        if (uploadError) throw uploadError;
+        const { supabase } = await import("../lib/supabase");
+        const { data } = supabase.storage.from("profile-photos").getPublicUrl(path);
+        setForm((current) => ({ ...current, avatar_url: data.publicUrl }));
+        setError("");
+      } catch {
+        setError("Photo upload failed. Check that profile photo storage is enabled, then try again.");
+      } finally {
+        setSaving(false);
+      }
+    })();
+  };
+
   useEffect(() => {
     if (!user) return;
     void (async () => {
@@ -164,13 +192,18 @@ export function ProfilePage() {
             <h3 className="text-xs font-semibold uppercase tracking-widest text-ink-500 mb-4">Personal details</h3>
             <div className="space-y-4">
               <div>
-                <Label>Profile picture link</Label>
-                <Input
-                  type="url"
-                  value={form.avatar_url}
-                  onChange={(e) => setForm({ ...form, avatar_url: e.target.value })}
-                  placeholder="https://example.com/photo.jpg"
-                />
+                <Label>Profile photo</Label>
+                <label className="flex cursor-pointer items-center justify-between gap-3 rounded-xl border border-dashed border-cream-200 bg-cream-50 px-4 py-3 text-sm text-ink-600 hover:border-sage-300">
+                  <span>{form.avatar_url ? "Choose a different photo" : "Upload a photo"}</span>
+                  <Camera size={17} className="text-sage-600" />
+                  <input
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    className="sr-only"
+                    onChange={(e) => uploadPhoto(e.target.files?.[0])}
+                  />
+                </label>
+                <p className="mt-1 text-xs text-ink-500">JPG, PNG, or WebP up to 2 MB.</p>
               </div>
               <div>
                 <Label>Full name</Label>
