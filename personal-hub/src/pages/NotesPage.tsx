@@ -3,6 +3,7 @@ import { Notebook, Plus, Trash2, Pin, PinOff, Pencil } from "lucide-react";
 import { listNotes, upsertNote, setNotePinned, deleteNote } from "../lib/data";
 import type { Note } from "../lib/types";
 import { Button, EmptyState, Input, Label, Modal, SectionHeader, Textarea } from "../components/ui";
+import { PrivateLock, usePrivateLock } from "../components/PrivateLock";
 
 export function NotesPage() {
   const [notes, setNotes] = useState<Note[]>([]);
@@ -12,6 +13,7 @@ export function NotesPage() {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ title: "", content: "" });
   const [saving, setSaving] = useState(false);
+  const { unlocked, unlock } = usePrivateLock();
 
   const load = async () => {
     try {
@@ -75,6 +77,15 @@ export function NotesPage() {
 
   const sorted = [...notes].sort((a, b) => Number(b.pinned) - Number(a.pinned));
 
+  if (!unlocked) {
+    return (
+      <div className="animate-fade-up">
+        <SectionHeader title="Notepad" subtitle="Quick notes and a private space for sensitive thoughts" />
+        <PrivateLock onUnlock={() => unlock(true)} />
+      </div>
+    );
+  }
+
   return (
     <div className="animate-fade-up">
       <SectionHeader
@@ -114,7 +125,7 @@ export function NotesPage() {
                 <h4 className="font-display text-lg font-semibold text-ink-800 truncate">
                   {note.title || "Untitled"}
                 </h4>
-                <div className="flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                <div className="flex gap-0.5 shrink-0">
                   <Button variant="ghost" size="sm" onClick={() => togglePin(note)} aria-label="Pin">
                     {note.pinned ? <PinOff size={13} /> : <Pin size={13} />}
                   </Button>

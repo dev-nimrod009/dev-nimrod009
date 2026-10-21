@@ -7,6 +7,12 @@ import { cn, formatDay, todayISO } from "../lib/utils";
 
 const MEAL_TYPES = ["Breakfast", "Lunch", "Dinner", "Snack"];
 const DAYS_TO_SHOW = 7;
+const MEAL_LIBRARY = [
+  { name: "Overnight oats", type: "Breakfast", recipe: "Mix oats, milk, yogurt, and fruit. Chill overnight." },
+  { name: "Chickpea bowl", type: "Lunch", recipe: "Roast chickpeas, add rice and greens, then finish with tahini." },
+  { name: "Vegetable pasta", type: "Dinner", recipe: "Cook pasta, sauté vegetables, combine with sauce, and serve warm." },
+];
+const PANTRY_ITEMS = ["Rice", "Oats", "Olive oil", "Eggs", "Spinach", "Tomatoes"];
 
 export function MealsPage() {
   const [meals, setMeals] = useState<Meal[]>([]);
@@ -104,6 +110,27 @@ export function MealsPage() {
 
       {error && <div className="mb-4 rounded-xl bg-rose-soft-100 text-rose-soft-600 text-sm px-4 py-3">{error}</div>}
 
+      <section className="mb-6 grid gap-4 lg:grid-cols-3">
+        <div className="rounded-2xl border border-cream-200 bg-white p-5 lg:col-span-2">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <div><h3 className="font-display text-lg font-semibold text-ink-800">Meal library</h3><p className="text-sm text-ink-500">Choose a planned meal, then assign it to the selected day.</p></div>
+            <span className="rounded-full bg-sage-100 px-3 py-1 text-xs font-semibold text-sage-700">Weekly plan</span>
+          </div>
+          <div className="grid gap-2 sm:grid-cols-3">
+            {MEAL_LIBRARY.map((meal) => <button key={meal.name} onClick={() => { setName(meal.name); setMealType(meal.type); setNotes(meal.recipe); }} className="rounded-xl border border-cream-200 bg-cream-50 p-3 text-left transition hover:border-sage-300"><p className="text-sm font-semibold text-ink-800">{meal.name}</p><p className="mt-1 text-xs text-ink-500">{meal.type}</p></button>)}
+          </div>
+        </div>
+        <div className="rounded-2xl border border-cream-200 bg-white p-5">
+          <h3 className="font-display text-lg font-semibold text-ink-800">Pantry</h3><p className="mb-3 text-sm text-ink-500">What is already at home.</p>
+          <div className="flex flex-wrap gap-2">{PANTRY_ITEMS.map((item) => <span key={item} className="rounded-full bg-cream-100 px-3 py-1.5 text-xs text-ink-700">{item}</span>)}</div>
+          <p className="mt-4 text-xs font-semibold uppercase tracking-widest text-ink-500">Shopping list</p><p className="mt-2 text-sm text-ink-600">Add missing ingredients from your recipes here each Sunday.</p>
+        </div>
+      </section>
+
+      <section className="mb-6 rounded-2xl border border-cream-200 bg-white p-5">
+        <h3 className="font-display text-lg font-semibold text-ink-800">Recipes</h3><div className="mt-3 grid gap-3 sm:grid-cols-3">{MEAL_LIBRARY.map((meal) => <article key={meal.name} className="rounded-xl bg-cream-50 p-4"><p className="text-sm font-semibold text-ink-800">{meal.name}</p><p className="mt-2 text-sm leading-relaxed text-ink-600">{meal.recipe}</p></article>)}</div>
+      </section>
+
       <section className="bg-white rounded-2xl border border-cream-200 p-6 mb-6">
         <div className="flex items-center gap-2 mb-4">
           <Wallet size={17} className="text-sage-600" />
@@ -127,7 +154,7 @@ export function MealsPage() {
                 </Button>
               </div>
             ) : (
-              <p className="font-display text-2xl font-semibold text-ink-800 mt-1 flex items-center justify-center gap-1">
+              <p className="font-display text-xl sm:text-2xl font-semibold text-ink-800 mt-1 flex items-center justify-center gap-1">
                 {budget}
                 <button onClick={startEditBudget} aria-label="Edit budget" className="text-ink-500/60 hover:text-sage-600">
                   <Pencil size={14} />
@@ -137,12 +164,12 @@ export function MealsPage() {
           </div>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-widest text-ink-500">Plan Cost</p>
-            <p className="font-display text-2xl font-semibold text-ink-800 mt-1">{totalCost}</p>
+            <p className="font-display text-xl sm:text-2xl font-semibold text-ink-800 mt-1">{totalCost}</p>
           </div>
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-widest text-ink-500">Remaining</p>
             <p
-              className={`font-display text-2xl font-semibold mt-1 ${
+              className={`font-display text-xl sm:text-2xl font-semibold mt-1 ${
                 remaining >= 0 ? "text-sage-600" : "text-clay-600"
               }`}
             >
@@ -239,7 +266,7 @@ export function MealsPage() {
                           variant="danger"
                           size="sm"
                           onClick={() => remove(meal.id)}
-                          className="opacity-0 group-hover:opacity-100"
+                          className="shrink-0"
                           aria-label="Remove meal"
                         >
                           <Trash2 size={12} />

@@ -77,7 +77,7 @@ export function ProfilePage() {
   };
 
   const uploadPhoto = (file: File | undefined) => {
-    if (!file) return;
+    if (!file || !user) return;
     if (!file.type.startsWith("image/")) {
       setError("Please choose an image file.");
       return;
@@ -86,12 +86,22 @@ export function ProfilePage() {
       setError("Profile photos must be 2 MB or smaller.");
       return;
     }
-    const reader = new FileReader();
-    reader.onload = () => {
-      setForm((current) => ({ ...current, avatar_url: String(reader.result ?? "") }));
-      setError("");
-    };
-    reader.readAsDataURL(file);
+    setSaving(true);
+    void (async () => {
+      try {
+        const path = `${user.id}/avatar-${Date.now()}.${file.type.split("/")[1] || "jpg"}`;
+        const { error: uploadError } = await import("../lib/supabase").then(({ supabase }) => supabase.storage.from("profile-photos").upload(path, file, { upsert: true, contentType: file.type }));
+        if (uploadError) throw uploadError;
+        const { supabase } = await import("../lib/supabase");
+        const { data } = supabase.storage.from("profile-photos").getPublicUrl(path);
+        setForm((current) => ({ ...current, avatar_url: data.publicUrl }));
+        setError("");
+      } catch {
+        setError("Photo upload failed. Check that profile photo storage is enabled, then try again.");
+      } finally {
+        setSaving(false);
+      }
+    })();
   };
 
   useEffect(() => {

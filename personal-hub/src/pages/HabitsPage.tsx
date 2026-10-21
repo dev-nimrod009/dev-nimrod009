@@ -134,16 +134,22 @@ export function HabitsPage() {
             return (
               <div
                 key={habit.id}
-                className="group bg-white rounded-2xl border border-cream-200 p-5 flex items-center gap-4 hover:shadow-md transition-all duration-200"
+                className="group bg-white rounded-2xl border border-cream-200 p-4 sm:p-5 hover:shadow-md transition-all duration-200"
               >
-                <div className={cn("w-11 h-11 rounded-xl flex items-center justify-center text-xl", c.bg)}>{habit.icon}</div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-ink-800">{habit.name}</p>
-                  <p className={cn("text-xs mt-0.5", streak > 0 ? "text-sage-600 font-medium" : "text-ink-500")}>
-                    {streak > 0 ? `🔥 ${streak}-day streak` : "No streak yet"}
-                  </p>
+                <div className="flex items-center gap-3">
+                  <div className={cn("w-11 h-11 rounded-xl flex items-center justify-center text-xl shrink-0", c.bg)}>{habit.icon}</div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-ink-800 truncate">{habit.name}</p>
+                    <p className={cn("text-xs mt-0.5", streak > 0 ? "text-sage-600 font-medium" : "text-ink-500")}>
+                      {streak > 0 ? `${streak}-day streak` : "No streak yet"}
+                    </p>
+                  </div>
+                  <Button variant="danger" size="sm" onClick={() => remove(habit)} className="ml-auto shrink-0" aria-label="Delete habit">
+                    <Trash2 size={13} />
+                  </Button>
                 </div>
-                <div className="flex items-center gap-1.5">
+                <div className="mt-4 flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-1.5">
                   {week.map((date) => {
                     const doneToday = habitLogs.some((l) => l.log_date === date);
                     const isToday = date === todayISO();
@@ -160,16 +166,9 @@ export function HabitsPage() {
                       />
                     );
                   })}
+                  </div>
+                  <span className="text-[10px] text-ink-500 shrink-0">7 days</span>
                 </div>
-                <Button
-                  variant="danger"
-                  size="sm"
-                  onClick={() => remove(habit)}
-                  className="opacity-0 group-hover:opacity-100 shrink-0"
-                  aria-label="Delete habit"
-                >
-                  <Trash2 size={13} />
-                </Button>
               </div>
             );
           })}

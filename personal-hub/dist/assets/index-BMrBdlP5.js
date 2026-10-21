@@ -1,3 +1,4 @@
+import { _ as __vitePreload } from "./pglite-ByTcSJm4.js";
 (function polyfill() {
   const relList = document.createElement("link").relList;
   if (relList && relList.supports && relList.supports("modulepreload")) {
@@ -7406,6 +7407,17 @@ const Inbox = createLucideIcon("Inbox", [
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
+const LockKeyhole = createLucideIcon("LockKeyhole", [
+  ["circle", { cx: "12", cy: "16", r: "1", key: "1au0dj" }],
+  ["rect", { x: "3", y: "10", width: "18", height: "12", rx: "2", key: "6s8ecr" }],
+  ["path", { d: "M7 10V7a5 5 0 0 1 10 0v3", key: "1pqi11" }]
+]);
+/**
+ * @license lucide-react v0.462.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
 const Menu = createLucideIcon("Menu", [
   ["line", { x1: "4", x2: "20", y1: "12", y2: "12", key: "1e0a9i" }],
   ["line", { x1: "4", x2: "20", y1: "6", y2: "6", key: "1owob3" }],
@@ -7554,6 +7566,22 @@ const Salad = createLucideIcon("Salad", [
 const Search = createLucideIcon("Search", [
   ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }],
   ["path", { d: "m21 21-4.3-4.3", key: "1qie3q" }]
+]);
+/**
+ * @license lucide-react v0.462.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const ShieldCheck = createLucideIcon("ShieldCheck", [
+  [
+    "path",
+    {
+      d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
+      key: "oel41y"
+    }
+  ],
+  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
 ]);
 /**
  * @license lucide-react v0.462.0 - ISC
@@ -30976,13 +31004,32 @@ const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     autoRefreshToken: true
   }
 });
+const supabase$1 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  supabase
+}, Symbol.toStringTag, { value: "Module" }));
 const AuthContext = reactExports.createContext(null);
 const PASSKEY_FLAG = "lifehub:has-passkey";
+function readPasskeyFlag() {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.localStorage.getItem(PASSKEY_FLAG) === "1";
+  } catch {
+    return false;
+  }
+}
+function writePasskeyFlag() {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(PASSKEY_FLAG, "1");
+  } catch {
+  }
+}
 function AuthProvider({ children }) {
   const [session, setSession] = reactExports.useState(null);
   const [user, setUser] = reactExports.useState(null);
   const [loading, setLoading] = reactExports.useState(true);
-  const [hasPasskey, setHasPasskey] = reactExports.useState(() => localStorage.getItem(PASSKEY_FLAG) === "1");
+  const [hasPasskey, setHasPasskey] = reactExports.useState(readPasskeyFlag);
   reactExports.useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       var _a;
@@ -31030,7 +31077,7 @@ function AuthProvider({ children }) {
     try {
       const { error } = await supabase.auth.registerPasskey();
       if (error) return { error: error.message };
-      localStorage.setItem(PASSKEY_FLAG, "1");
+      writePasskeyFlag();
       setHasPasskey(true);
       return { error: null };
     } catch (e) {
@@ -31813,7 +31860,7 @@ function ProfilePage() {
     if (result.error) setError(result.error);
   };
   const uploadPhoto = (file) => {
-    if (!file) return;
+    if (!file || !user) return;
     if (!file.type.startsWith("image/")) {
       setError("Please choose an image file.");
       return;
@@ -31822,12 +31869,28 @@ function ProfilePage() {
       setError("Profile photos must be 2 MB or smaller.");
       return;
     }
-    const reader = new FileReader();
-    reader.onload = () => {
-      setForm((current) => ({ ...current, avatar_url: String(reader.result ?? "") }));
-      setError("");
-    };
-    reader.readAsDataURL(file);
+    setSaving(true);
+    void (async () => {
+      try {
+        const path = `${user.id}/avatar-${Date.now()}.${file.type.split("/")[1] || "jpg"}`;
+        const { error: uploadError } = await __vitePreload(async () => {
+          const { error: uploadError2 } = await Promise.resolve().then(() => supabase$1);
+          return { error: uploadError2 };
+        }, true ? void 0 : void 0).then(({ supabase: supabase22 }) => supabase22.storage.from("profile-photos").upload(path, file, { upsert: true, contentType: file.type }));
+        if (uploadError) throw uploadError;
+        const { supabase: supabase2 } = await __vitePreload(async () => {
+          const { supabase: supabase3 } = await Promise.resolve().then(() => supabase$1);
+          return { supabase: supabase3 };
+        }, true ? void 0 : void 0);
+        const { data } = supabase2.storage.from("profile-photos").getPublicUrl(path);
+        setForm((current) => ({ ...current, avatar_url: data.publicUrl }));
+        setError("");
+      } catch {
+        setError("Photo upload failed. Check that profile photo storage is enabled, then try again.");
+      } finally {
+        setSaving(false);
+      }
+    })();
   };
   reactExports.useEffect(() => {
     if (!user) return;
@@ -32219,6 +32282,69 @@ function DashboardPage({ onNavigate }) {
     ] }) })
   ] });
 }
+const LOCK_KEY = "lifehub:private-lock-hash";
+function readHash() {
+  if (typeof window === "undefined") return "";
+  try {
+    return window.localStorage.getItem(LOCK_KEY) ?? "";
+  } catch {
+    return "";
+  }
+}
+function writeHash(value) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(LOCK_KEY, value);
+  } catch {
+  }
+}
+async function hashPassword(value) {
+  if (typeof crypto !== "undefined" && crypto.subtle) {
+    const bytes = new TextEncoder().encode(value);
+    const digest = await crypto.subtle.digest("SHA-256", bytes);
+    return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+  }
+  return value;
+}
+function usePrivateLock() {
+  const [unlocked, setUnlocked] = reactExports.useState(false);
+  return { unlocked, unlock: setUnlocked };
+}
+function PrivateLock({ onUnlock }) {
+  const [password, setPassword] = reactExports.useState("");
+  const [hasPassword, setHasPassword] = reactExports.useState(() => Boolean(readHash()));
+  const [error, setError] = reactExports.useState("");
+  const submit = async () => {
+    if (password.length < 4) {
+      setError("Use at least 4 characters.");
+      return;
+    }
+    const digest = await hashPassword(password);
+    const saved = readHash();
+    if (!saved) {
+      writeHash(digest);
+      setHasPassword(true);
+      onUnlock();
+      return;
+    }
+    if (digest !== saved) {
+      setError("That password does not match.");
+      return;
+    }
+    onUnlock();
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "mx-auto max-w-md rounded-2xl border border-cream-200 bg-white p-6 text-center shadow-sm", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mx-auto mb-4 flex size-14 items-center justify-center rounded-2xl bg-sage-100 text-sage-600", children: hasPassword ? /* @__PURE__ */ jsxRuntimeExports.jsx(LockKeyhole, { size: 26 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldCheck, { size: 26 }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-display text-xl font-semibold text-ink-800", children: hasPassword ? "Private section locked" : "Create your private lock" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-sm leading-relaxed text-ink-500", children: hasPassword ? "Enter your password to unlock this section. It works offline on this device." : "Choose a password for private notes and journal entries. It is stored only on this device." }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-5 text-left", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { children: "Password" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Input, { type: "password", value: password, onChange: (event) => setPassword(event.target.value), onKeyDown: (event) => event.key === "Enter" && void submit(), autoComplete: "new-password" })
+    ] }),
+    error && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-left text-sm text-rose-soft-600", children: error }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { className: "mt-5 w-full", onClick: () => void submit(), children: hasPassword ? "Unlock private content" : "Set private password" })
+  ] });
+}
 const MOODS = ["", "Happy", "Calm", "Tired", "Sad", "Anxious", "Excited", "Grateful"];
 function JournalPage() {
   const [entries, setEntries] = reactExports.useState([]);
@@ -32229,6 +32355,7 @@ function JournalPage() {
   const [open, setOpen] = reactExports.useState(false);
   const [form, setForm] = reactExports.useState({ title: "", content: "", mood: "" });
   const [saving, setSaving] = reactExports.useState(false);
+  const { unlocked, unlock } = usePrivateLock();
   const load = async () => {
     try {
       setEntries(await listJournal());
@@ -32277,11 +32404,17 @@ function JournalPage() {
   const filtered = entries.filter(
     (e) => e.title.toLowerCase().includes(query.toLowerCase()) || e.content.toLowerCase().includes(query.toLowerCase())
   );
+  if (!unlocked) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "animate-fade-up", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader, { title: "Private Journal", subtitle: "Your reflections are protected on this device" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(PrivateLock, { onUnlock: () => unlock(true) })
+    ] });
+  }
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "animate-fade-up", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       SectionHeader,
       {
-        title: "Journal",
+        title: "Private Journal",
         subtitle: "Longer reflections, ideas, and memories",
         action: /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { onClick: startNew, children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { size: 16 }),
@@ -32322,7 +32455,7 @@ function JournalPage() {
                 entry.mood && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-2 text-sage-600 font-medium", children: entry.mood })
               ] })
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-1", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "ghost", size: "sm", onClick: () => startEdit(entry), "aria-label": "Edit", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Pencil, { size: 14 }) }),
               /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "danger", size: "sm", onClick: () => remove2(entry.id), "aria-label": "Delete", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { size: 14 }) })
             ] })
@@ -32480,6 +32613,7 @@ function NotesPage() {
   const [open, setOpen] = reactExports.useState(false);
   const [form, setForm] = reactExports.useState({ title: "", content: "" });
   const [saving, setSaving] = reactExports.useState(false);
+  const { unlocked, unlock } = usePrivateLock();
   const load = async () => {
     try {
       setNotes(await listNotes());
@@ -32534,6 +32668,12 @@ function NotesPage() {
     load();
   };
   const sorted = [...notes].sort((a, b) => Number(b.pinned) - Number(a.pinned));
+  if (!unlocked) {
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "animate-fade-up", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader, { title: "Notepad", subtitle: "Quick notes and a private space for sensitive thoughts" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(PrivateLock, { onUnlock: () => unlock(true) })
+    ] });
+  }
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "animate-fade-up", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       SectionHeader,
@@ -32561,7 +32701,7 @@ function NotesPage() {
         children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start justify-between gap-2", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("h4", { className: "font-display text-lg font-semibold text-ink-800 truncate", children: note.title || "Untitled" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity shrink-0", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-0.5 shrink-0", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "ghost", size: "sm", onClick: () => togglePin(note), "aria-label": "Pin", children: note.pinned ? /* @__PURE__ */ jsxRuntimeExports.jsx(PinOff, { size: 13 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(Pin, { size: 13 }) }),
               /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "ghost", size: "sm", onClick: () => startEdit(note), "aria-label": "Edit", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Pencil, { size: 13 }) }),
               /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "danger", size: "sm", onClick: () => remove2(note.id), "aria-label": "Delete", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { size: 13 }) })
@@ -33041,41 +33181,36 @@ function HabitsPage() {
       return /* @__PURE__ */ jsxRuntimeExports.jsxs(
         "div",
         {
-          className: "group bg-white rounded-2xl border border-cream-200 p-5 flex items-center gap-4 hover:shadow-md transition-all duration-200",
+          className: "group bg-white rounded-2xl border border-cream-200 p-4 sm:p-5 hover:shadow-md transition-all duration-200",
           children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: cn("w-11 h-11 rounded-xl flex items-center justify-center text-xl", c.bg), children: habit.icon }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1 min-w-0", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm font-semibold text-ink-800", children: habit.name }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: cn("text-xs mt-0.5", streak > 0 ? "text-sage-600 font-medium" : "text-ink-500"), children: streak > 0 ? `🔥 ${streak}-day streak` : "No streak yet" })
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: cn("w-11 h-11 rounded-xl flex items-center justify-center text-xl shrink-0", c.bg), children: habit.icon }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm font-semibold text-ink-800 truncate", children: habit.name }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: cn("text-xs mt-0.5", streak > 0 ? "text-sage-600 font-medium" : "text-ink-500"), children: streak > 0 ? `${streak}-day streak` : "No streak yet" })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "danger", size: "sm", onClick: () => remove2(habit), className: "ml-auto shrink-0", "aria-label": "Delete habit", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { size: 13 }) })
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center gap-1.5", children: week.map((date) => {
-              const doneToday = habitLogs.some((l) => l.log_date === date);
-              const isToday = date === todayISO();
-              return /* @__PURE__ */ jsxRuntimeExports.jsx(
-                "button",
-                {
-                  onClick: () => toggle(habit, date),
-                  className: cn(
-                    "w-6 h-6 rounded-full border-2 transition-all duration-200 active:scale-90",
-                    doneToday ? `${c.bg} ${c.ring} ring-2` : "bg-white border-cream-200 hover:border-ink-500/30",
-                    isToday && "ring-offset-2 ring-offset-white"
-                  ),
-                  "aria-label": `${doneToday ? "Uncheck" : "Check"} ${habit.name} on ${date}`
-                },
-                date
-              );
-            }) }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(
-              Button,
-              {
-                variant: "danger",
-                size: "sm",
-                onClick: () => remove2(habit),
-                className: "opacity-0 group-hover:opacity-100 shrink-0",
-                "aria-label": "Delete habit",
-                children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { size: 13 })
-              }
-            )
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-4 flex items-center justify-between gap-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center gap-1.5", children: week.map((date) => {
+                const doneToday = habitLogs.some((l) => l.log_date === date);
+                const isToday = date === todayISO();
+                return /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "button",
+                  {
+                    onClick: () => toggle(habit, date),
+                    className: cn(
+                      "w-6 h-6 rounded-full border-2 transition-all duration-200 active:scale-90",
+                      doneToday ? `${c.bg} ${c.ring} ring-2` : "bg-white border-cream-200 hover:border-ink-500/30",
+                      isToday && "ring-offset-2 ring-offset-white"
+                    ),
+                    "aria-label": `${doneToday ? "Uncheck" : "Check"} ${habit.name} on ${date}`
+                  },
+                  date
+                );
+              }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-[10px] text-ink-500 shrink-0", children: "7 days" })
+            ] })
           ]
         },
         habit.id
@@ -33130,6 +33265,12 @@ function HabitsPage() {
 }
 const MEAL_TYPES = ["Breakfast", "Lunch", "Dinner", "Snack"];
 const DAYS_TO_SHOW = 7;
+const MEAL_LIBRARY = [
+  { name: "Overnight oats", type: "Breakfast", recipe: "Mix oats, milk, yogurt, and fruit. Chill overnight." },
+  { name: "Chickpea bowl", type: "Lunch", recipe: "Roast chickpeas, add rice and greens, then finish with tahini." },
+  { name: "Vegetable pasta", type: "Dinner", recipe: "Cook pasta, sauté vegetables, combine with sauce, and serve warm." }
+];
+const PANTRY_ITEMS = ["Rice", "Oats", "Olive oil", "Eggs", "Spinach", "Tomatoes"];
 function MealsPage() {
   const [meals, setMeals] = reactExports.useState([]);
   const [loading, setLoading] = reactExports.useState(true);
@@ -33213,6 +33354,39 @@ function MealsPage() {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "animate-fade-up", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(SectionHeader, { title: "Meal Planner", subtitle: "Plan the week's meals and stay on budget" }),
     error && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mb-4 rounded-xl bg-rose-soft-100 text-rose-soft-600 text-sm px-4 py-3", children: error }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "mb-6 grid gap-4 lg:grid-cols-3", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-2xl border border-cream-200 bg-white p-5 lg:col-span-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mb-4 flex items-center justify-between gap-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-display text-lg font-semibold text-ink-800", children: "Meal library" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-ink-500", children: "Choose a planned meal, then assign it to the selected day." })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "rounded-full bg-sage-100 px-3 py-1 text-xs font-semibold text-sage-700", children: "Weekly plan" })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid gap-2 sm:grid-cols-3", children: MEAL_LIBRARY.map((meal) => /* @__PURE__ */ jsxRuntimeExports.jsxs("button", { onClick: () => {
+          setName(meal.name);
+          setMealType(meal.type);
+          setNotes(meal.recipe);
+        }, className: "rounded-xl border border-cream-200 bg-cream-50 p-3 text-left transition hover:border-sage-300", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm font-semibold text-ink-800", children: meal.name }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-1 text-xs text-ink-500", children: meal.type })
+        ] }, meal.name)) })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded-2xl border border-cream-200 bg-white p-5", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-display text-lg font-semibold text-ink-800", children: "Pantry" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mb-3 text-sm text-ink-500", children: "What is already at home." }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-wrap gap-2", children: PANTRY_ITEMS.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "rounded-full bg-cream-100 px-3 py-1.5 text-xs text-ink-700", children: item }, item)) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-4 text-xs font-semibold uppercase tracking-widest text-ink-500", children: "Shopping list" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-sm text-ink-600", children: "Add missing ingredients from your recipes here each Sunday." })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "mb-6 rounded-2xl border border-cream-200 bg-white p-5", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "font-display text-lg font-semibold text-ink-800", children: "Recipes" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-3 grid gap-3 sm:grid-cols-3", children: MEAL_LIBRARY.map((meal) => /* @__PURE__ */ jsxRuntimeExports.jsxs("article", { className: "rounded-xl bg-cream-50 p-4", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm font-semibold text-ink-800", children: meal.name }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-sm leading-relaxed text-ink-600", children: meal.recipe })
+      ] }, meal.name)) })
+    ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { className: "bg-white rounded-2xl border border-cream-200 p-6 mb-6", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 mb-4", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(Wallet, { size: 17, className: "text-sage-600" }),
@@ -33234,21 +33408,21 @@ function MealsPage() {
               }
             ),
             /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "ghost", size: "sm", onClick: saveBudget, "aria-label": "Save budget", children: "Save" })
-          ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "font-display text-2xl font-semibold text-ink-800 mt-1 flex items-center justify-center gap-1", children: [
+          ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "font-display text-xl sm:text-2xl font-semibold text-ink-800 mt-1 flex items-center justify-center gap-1", children: [
             budget,
             /* @__PURE__ */ jsxRuntimeExports.jsx("button", { onClick: startEditBudget, "aria-label": "Edit budget", className: "text-ink-500/60 hover:text-sage-600", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Pencil, { size: 14 }) })
           ] })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-semibold uppercase tracking-widest text-ink-500", children: "Plan Cost" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display text-2xl font-semibold text-ink-800 mt-1", children: totalCost })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display text-xl sm:text-2xl font-semibold text-ink-800 mt-1", children: totalCost })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
           /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[10px] font-semibold uppercase tracking-widest text-ink-500", children: "Remaining" }),
           /* @__PURE__ */ jsxRuntimeExports.jsx(
             "p",
             {
-              className: `font-display text-2xl font-semibold mt-1 ${remaining >= 0 ? "text-sage-600" : "text-clay-600"}`,
+              className: `font-display text-xl sm:text-2xl font-semibold mt-1 ${remaining >= 0 ? "text-sage-600" : "text-clay-600"}`,
               children: remaining
             }
           )
@@ -33323,7 +33497,7 @@ function MealsPage() {
               variant: "danger",
               size: "sm",
               onClick: () => remove2(meal.id),
-              className: "opacity-0 group-hover:opacity-100",
+              className: "shrink-0",
               "aria-label": "Remove meal",
               children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { size: 12 })
             }
@@ -34260,7 +34434,7 @@ function App() {
           }
         )
       ] }),
-      menuOpen && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute inset-x-0 top-full border-t border-cream-200 bg-white/98 shadow-xl max-h-[42vh] overflow-y-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Sidebar, { active: section, onNavigate: navigate, compact: true }) })
+      menuOpen && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute right-3 top-full mt-2 w-[min(33vw,17rem)] min-w-[12rem] max-h-[68vh] overflow-y-auto rounded-2xl border border-cream-200 bg-white shadow-2xl", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Sidebar, { active: section, onNavigate: navigate, compact: true }) })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("aside", { className: "hidden md:flex flex-col w-60 shrink-0 border-r border-cream-200 bg-white/60 sticky top-0 h-screen overflow-y-auto", children: [

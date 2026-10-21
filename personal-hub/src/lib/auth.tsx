@@ -18,11 +18,29 @@ const AuthContext = createContext<AuthState | null>(null);
 
 const PASSKEY_FLAG = "lifehub:has-passkey";
 
+function readPasskeyFlag(): boolean {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.localStorage.getItem(PASSKEY_FLAG) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function writePasskeyFlag(): void {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(PASSKEY_FLAG, "1");
+  } catch {
+    // The passkey itself still works when browser storage is unavailable.
+  }
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const [hasPasskey, setHasPasskey] = useState(() => localStorage.getItem(PASSKEY_FLAG) === "1");
+  const [hasPasskey, setHasPasskey] = useState(readPasskeyFlag);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -77,7 +95,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const { error } = await supabase.auth.registerPasskey();
       if (error) return { error: error.message };
-      localStorage.setItem(PASSKEY_FLAG, "1");
+      writePasskeyFlag();
       setHasPasskey(true);
       return { error: null };
     } catch (e) {

@@ -4,6 +4,7 @@ import { listJournal, upsertJournal, deleteJournal } from "../lib/data";
 import type { JournalEntry } from "../lib/types";
 import { Button, EmptyState, Input, Label, Modal, SectionHeader, Textarea } from "../components/ui";
 import { formatDay } from "../lib/utils";
+import { PrivateLock, usePrivateLock } from "../components/PrivateLock";
 
 const MOODS = ["", "Happy", "Calm", "Tired", "Sad", "Anxious", "Excited", "Grateful"];
 
@@ -16,6 +17,7 @@ export function JournalPage() {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ title: "", content: "", mood: "" });
   const [saving, setSaving] = useState(false);
+  const { unlocked, unlock } = usePrivateLock();
 
   const load = async () => {
     try {
@@ -74,10 +76,19 @@ export function JournalPage() {
       e.content.toLowerCase().includes(query.toLowerCase())
   );
 
+  if (!unlocked) {
+    return (
+      <div className="animate-fade-up">
+        <SectionHeader title="Private Journal" subtitle="Your reflections are protected on this device" />
+        <PrivateLock onUnlock={() => unlock(true)} />
+      </div>
+    );
+  }
+
   return (
     <div className="animate-fade-up">
       <SectionHeader
-        title="Journal"
+        title="Private Journal"
         subtitle="Longer reflections, ideas, and memories"
         action={
           <Button onClick={startNew}>
@@ -127,7 +138,7 @@ export function JournalPage() {
                     {entry.mood && <span className="ml-2 text-sage-600 font-medium">{entry.mood}</span>}
                   </p>
                 </div>
-                <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="flex gap-1">
                   <Button variant="ghost" size="sm" onClick={() => startEdit(entry)} aria-label="Edit">
                     <Pencil size={14} />
                   </Button>
